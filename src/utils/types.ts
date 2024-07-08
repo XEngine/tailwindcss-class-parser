@@ -3,26 +3,51 @@ export type NamedUtilityValue = {
     value: string
     fraction: string | null
 }
-type ArbitraryModifier = {
+
+export type ArbitraryUtilityValue = {
+    kind: 'arbitrary'
+
+    /**
+     * bg-[color:--my-color]
+     *     ^^^^^
+     */
+    dataType: string | null
+
+    /**
+     * bg-[#0088cc]
+     *     ^^^^^^^
+     * bg-[--my_variable]
+     * var(^^^^^^^^^^^^^)
+     */
+    value: string
+
+    /**
+     * bg-[--my_variable]
+     *     ^^^^^^^^^^^^^
+     */
+    dashedIdent: string | null
+}
+
+export type ArbitraryModifier = {
     kind: 'arbitrary'
     value: string
     dashedIdent: string | null
 }
 
 
-type NamedModifier = {
+export type NamedModifier = {
     kind: 'named'
     value: string
 }
 
 export type CandidateModifier = ArbitraryModifier | NamedModifier
 
-type ArbitraryVariantValue = {
+export type ArbitraryVariantValue = {
     kind: 'arbitrary'
     value: string
 }
 
-type NamedVariantValue = {
+export type NamedVariantValue = {
     kind: 'named'
     value: string
 }
@@ -76,4 +101,60 @@ export type Variant =
 
     // If true, it can be applied as a child of a compound variant
     compounds: boolean
+}
+
+
+export type Candidate =
+/**
+ * Arbitrary candidates are candidates that register utilities on the fly with
+ * a property and a value.
+ *
+ * E.g.:
+ *
+ * - `[color:red]`
+ * - `[color:red]/50`
+ * - `[color:red]/50!`
+ */
+    | {
+    kind: 'arbitrary'
+    property: string
+    value: string
+    modifier: ArbitraryModifier | NamedModifier | null
+    variants: Variant[]
+    important: boolean
+}
+
+    /**
+     * Static candidates are candidates that don't take any arguments.
+     *
+     * E.g.:
+     *
+     * - `underline`
+     * - `flex`
+     */
+    | {
+    kind: 'static'
+    root: string
+    variants: Variant[]
+    negative: boolean
+    important: boolean
+}
+
+    /**
+     * Functional candidates are candidates that can take an argument.
+     *
+     * E.g.:
+     *
+     * - `bg-red-500`
+     * - `bg-[#0088cc]`
+     * - `w-1/2`
+     */
+    | {
+    kind: 'functional'
+    root: string
+    value: ArbitraryUtilityValue | NamedUtilityValue | null
+    modifier: ArbitraryModifier | NamedModifier | null
+    variants: Variant[]
+    negative: boolean
+    important: boolean
 }
