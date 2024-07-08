@@ -2,7 +2,7 @@ import { isColor } from './is-color'
 import { hasMathFn } from './math-operators'
 import { segment } from './segment'
 
-type DataType =
+export type DataType =
     | 'color'
     | 'length'
     | 'percentage'
@@ -223,7 +223,7 @@ function isLength(value: string): boolean {
 function isBackgroundPosition(value: string): boolean {
     let count = 0
 
-    for (let part of segment(value, ' ')) {
+    for (let part of segment(value, '-')) {
         if (
             part === 'center' ||
             part === 'top' ||

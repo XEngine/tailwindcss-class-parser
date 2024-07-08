@@ -1,3 +1,5 @@
+import {segment} from "./segment.ts";
+
 const HASH = 0x23
 
 const NAMED_COLORS = new Set([

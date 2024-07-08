@@ -1,18 +1,12 @@
-import type {Config, ThemeConfig} from "tailwindcss/types/config"
+import type {Config, CustomThemeConfig, ThemeConfig} from "tailwindcss/types/config"
 import resolveConfig from 'tailwindcss/resolveConfig';
 import {segment} from "./utils/segment.ts";
 import {arbitraryParser} from "./arbitrary-parser.ts";
-import {createUtilities} from "./utilities.ts";
 import {findRoot} from "./find-root.ts";
 import type {Variant} from "./utils/types.ts";
-//import {findNamedProperty, namedPlugins, plugins, possiblePlugins} from "./plugins.ts";
-
-const staticProperties = new Map([
-    ["backgroundImage", {prefix: 'bg', scale: 'backgroundImage'}],
-    ["backgroundPosition", {prefix: 'bg', scale: 'backgroundPosition'}],
-    ["backgroundSize", {prefix: 'bg', scale: 'backgroundSize'}],
-    ["backgroundRepeat", {prefix: 'bg', scale: 'backgroundRepeat'}],
-])
+import {functionalPlugins, variants} from "./plugins";
+import {determineUnitType} from "./utils/unit-type";
+import {parseVariant} from "./parse-variant";
 
 export type State = {
     important: boolean
@@ -29,19 +23,10 @@ export type ArbitraryModifier = {
     dashedIdent: string | null
 }
 
-export type Output = {
-    kind: string
-    property: string
-    value: string
-    modifier: ArbitraryModifier | NamedModifier | null
-    important: boolean
-    negative: boolean
-}
-
-export const parse = (input: string, config?: Config) => {
-    const parsedConfig = resolveConfig(config || {} as Config)
+export const parse = (input: string, config?: CustomThemeConfig) => {
+    //@ts-ignore
+    const parsedConfig = resolveConfig(config || {})
     const theme = parsedConfig.theme
-    console.log(theme)
 
     let state: State = {
         important: false,
@@ -50,14 +35,13 @@ export const parse = (input: string, config?: Config) => {
     const variants = segment(input, ':')
     let base = variants.pop()!
 
-    /*let parsedCandidateVariants: Variant[] = []
+    let parsedCandidateVariants: Variant[] = []
 
     for (let i = variants.length - 1; i >= 0; --i) {
-        let parsedVariant = parseVariant(variants[i])
+        let parsedVariant = parseVariant(variants[i], Object.keys(theme!["screens"] || {}))
         if (parsedVariant === null) return null
-
         parsedCandidateVariants.push(parsedVariant)
-    }*/
+    }
 
     //check if we have a negativeness
     if (base[0] === '!') {
@@ -74,35 +58,49 @@ export const parse = (input: string, config?: Config) => {
         return arbitraryParser(base, state)
     }
 
-    const utilities = createUtilities(theme)
-    let [root, value] = findRoot(base, utilities)
-    if (root === null) return null
+    let valueDeclaration = {}
+    let [root, value] = findRoot(base, functionalPlugins)
+    if (!root) {
+        throw new Error("Could not determine root")
+    }
+    //@ts-ignore
+    const unitType = determineUnitType(theme, value)
+    const plugins = functionalPlugins.get(root)
+    const associatedPluginByType = plugins!.find(plugin => plugin.type === unitType)
 
-    const utility = utilities.get(root)
+    if (!associatedPluginByType) {
+        throw new Error("Could not find plugin")
+    }
 
-    if(!utility) return null
+    const scale = theme![associatedPluginByType.ns]
 
-    if (utility.kind === 'static') {
-        if (value !== null) return null
-        return {
-            ...utility.declarations,
-            kind: utility.kind,
-            root,
-            //variants: parsedCandidateVariants,
-            negative: state.negative,
-            important: state.important,
+    if (value) {
+        if (unitType === "color") {
+            const [color, shade] = segment(value, '-')
+            valueDeclaration = scale[color][shade]
+                ? {
+                    value: scale[color][shade],
+                    raw: value,
+                    type: 'color',
+                }
+                : {}
+        } else  {
+            valueDeclaration = {
+                value: scale[value],
+                raw: value,
+                type: unitType
+            }
         }
     }
 
     return {
-        ...utility.declarations,
-        kind: utility.kind,
-        root,
-        //variants: parsedCandidateVariants,
-        value: utility.handleFn(value),
-        negative: state.negative,
+        root: root,
+        property: associatedPluginByType.ns,
+        value: valueDeclaration,
+        modifier: parsedCandidateVariants,
         important: state.important,
+        negative: state.negative
     }
 }
 
-console.log(parse("bg-red-500"))
+console.log(parse("bg-opacity-50"))

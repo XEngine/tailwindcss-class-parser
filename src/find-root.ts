@@ -28,7 +28,6 @@ export function findRoot(
     // `bg`         -> Match
     do {
         let maybeRoot = input.slice(0, idx)
-        console.log(lookup.has(maybeRoot), lookup)
         if (lookup.has(maybeRoot)) {
 
             return [maybeRoot, input.slice(idx + 1)]

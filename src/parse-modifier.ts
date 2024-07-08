@@ -1,6 +1,7 @@
 import {decodeArbitraryValue} from "./utils/decodeArbitraryValue.ts";
+import type {CandidateModifier} from "./utils/types.ts";
 
-export function parseModifier(modifier: string) {
+export function parseModifier(modifier: string): CandidateModifier  {
     if (modifier[0] === '[' && modifier[modifier.length - 1] === ']') {
         let arbitraryValue = modifier.slice(1, -1)
 

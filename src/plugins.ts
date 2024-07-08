@@ -1,112 +1,124 @@
-export const functionalPlugins = new Map<string, (candidate: string) => void>([
-    ["bg", (candidate: string) => {
-        console.log(candidate)
-    }]
+import type {UnitType} from "./utils/unit-type.ts";
+import type {DataType} from "./utils/infer-data-type.ts";
+import type {Variant} from "./utils/types.ts";
+
+export type FunctionalPlugin = {
+    prefix: string,
+    ns: string,
+    type: DataType
+    supportNegative?: boolean
+}
+
+export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     // Background
-   /* ["backgroundImage", {prefix: 'bg', scale: 'backgroundImage'}],
-    ["backgroundPosition", {prefix: 'bg', scale: 'backgroundPosition'}],
-    ["backgroundSize", {prefix: 'bg', scale: 'backgroundSize'}],
-    ["backgroundColor", {prefix: 'bg', scale: 'backgroundColor'}],
-    ["backgroundOpacity", {prefix: 'bg', scale: 'backgroundOpacity'}],
+    ["bg", [
+        {ns: 'backgroundImage', prefix: 'bg', type: 'image'},
+        {ns: 'backgroundPosition', prefix: 'bg', type: 'position'},
+        {ns: 'backgroundSize', prefix: 'bg', type: 'bg-size'},
+        {ns: 'backgroundColor', prefix: 'bg', type: 'color'},
+    ]],
+    ["bg-opacity", [
+        {ns: 'backgroundOpacity', prefix: 'bg', type: 'number'},
+    ]],
+    /*
+        // Border
+        ["borderColor", {prefix: 'border'}],
+        ["borderOpacity", {prefix: 'border'}],
+        ["borderRadius", {prefix: 'rounded'}],
+        ["borderWidth", {prefix: 'border'}],
+        ["borderStyle", {prefix: 'border'}],
 
-    // Border
-    ["borderColor", {prefix: 'border', scale: 'borderColor'}],
-    ["borderOpacity", {prefix: 'border', scale: 'borderOpacity'}],
-    ["borderRadius", {prefix: 'rounded', scale: 'borderRadius'}],
-    ["borderWidth", {prefix: 'border', scale: 'borderWidth'}],
-    ["borderStyle", {prefix: 'border', scale: 'borderStyle'}],
+        // Colors
+        ["textColor", {prefix: 'text'}],
+        ["textOpacity", {prefix: 'text-opacity'}],
+        ["placeholderColor", {prefix: 'placeholder'}],
+        ["placeholderOpacity", {prefix: 'placeholder'}],
 
-    // Colors
-    ["textColor", {prefix: 'text', scale: 'textColor'}],
-    ["textOpacity", {prefix: 'text-opacity', scale: 'textOpacity'}],
-    ["placeholderColor", {prefix: 'placeholder', scale: 'placeholderColor'}],
-    ["placeholderOpacity", {prefix: 'placeholder', scale: 'placeholderOpacity'}],
+        // Flexbox
+        ["flex", {prefix: 'flex'}],
+        ["flexDirection", {prefix: 'flex'}],
+        ["flexWrap", {prefix: 'flex'}],
+        ["alignItems", {prefix: 'items'}],
+        ["justifyContent", {prefix: 'justify'}],
+        ["alignContent", {prefix: 'content'}],
+        ["alignSelf", {prefix: 'self'}],
 
-    // Flexbox
-    ["flex", {prefix: 'flex', scale: 'flex'}],
-    ["flexDirection", {prefix: 'flex', scale: 'flexDirection'}],
-    ["flexWrap", {prefix: 'flex', scale: 'flexWrap'}],
-    ["alignItems", {prefix: 'items', scale: 'alignItems'}],
-    ["justifyContent", {prefix: 'justify', scale: 'justifyContent'}],
-    ["alignContent", {prefix: 'content', scale: 'alignContent'}],
-    ["alignSelf", {prefix: 'self', scale: 'alignSelf'}],
+        // Grid
+        ["gridTemplateColumns", {prefix: 'grid-cols'}],
+        ["gridTemplateRows", {prefix: 'grid-rows'}],
+        ["gap", {prefix: 'gap'}],
+        ["justifyItems", {prefix: 'justify-items'}],
+        ["alignItems", {prefix: 'items'}],
+        ["placeItems", {prefix: 'place-items'}],
+        ["justifySelf", {prefix: 'justify-self'}],
+        ["alignSelf", {prefix: 'self'}],
+        ["placeSelf", {prefix: 'place-self'}],
 
-    // Grid
-    ["gridTemplateColumns", {prefix: 'grid-cols', scale: 'gridTemplateColumns'}],
-    ["gridTemplateRows", {prefix: 'grid-rows', scale: 'gridTemplateRows'}],
-    ["gap", {prefix: 'gap', scale: 'gap'}],
-    ["justifyItems", {prefix: 'justify-items', scale: 'justifyItems'}],
-    ["alignItems", {prefix: 'items', scale: 'alignItems'}],
-    ["placeItems", {prefix: 'place-items', scale: 'placeItems'}],
-    ["justifySelf", {prefix: 'justify-self', scale: 'justifySelf'}],
-    ["alignSelf", {prefix: 'self', scale: 'alignSelf'}],
-    ["placeSelf", {prefix: 'place-self', scale: 'placeSelf'}],
+        // Layout
+        ["display", {prefix: 'display'}],
+        ["overflow", {prefix: 'overflow'}],
+        ["overflowX", {prefix: 'overflow-x'}],
+        ["overflowY", {prefix: 'overflow-y'}],
+        ["position", {prefix: 'position'}],
+        ["inset", {prefix: 'inset'}],
+        ["insetX", {prefix: 'inset-x'}],
+        ["insetY", {prefix: 'inset-y'}],
+        ["top", {prefix: 'top'}],
+        ["right", {prefix: 'right'}],
+        ["bottom", {prefix: 'bottom'}],
+        ["left", {prefix: 'left'}],
 
-    // Layout
-    ["display", {prefix: 'display', scale: 'display'}],
-    ["overflow", {prefix: 'overflow', scale: 'overflow'}],
-    ["overflowX", {prefix: 'overflow-x', scale: 'overflowX'}],
-    ["overflowY", {prefix: 'overflow-y', scale: 'overflowY'}],
-    ["position", {prefix: 'position', scale: 'position'}],
-    ["inset", {prefix: 'inset', scale: 'inset'}],
-    ["insetX", {prefix: 'inset-x', scale: 'insetX'}],
-    ["insetY", {prefix: 'inset-y', scale: 'insetY'}],
-    ["top", {prefix: 'top', scale: 'inset'}],
-    ["right", {prefix: 'right', scale: 'inset'}],
-    ["bottom", {prefix: 'bottom', scale: 'inset'}],
-    ["left", {prefix: 'left', scale: 'inset'}],
+        // Sizing
+        ["width", {prefix: 'w'}],
+        ["minWidth", {prefix: 'min-w'}],
+        ["maxWidth", {prefix: 'max-w'}],
+        ["height", {prefix: 'h'}],
+        ["minHeight", {prefix: 'min-h'}],
+        ["maxHeight", {prefix: 'max-h'}],
 
-    // Sizing
-    ["width", {prefix: 'w', scale: 'width'}],
-    ["minWidth", {prefix: 'min-w', scale: 'minWidth'}],
-    ["maxWidth", {prefix: 'max-w', scale: 'maxWidth'}],
-    ["height", {prefix: 'h', scale: 'height'}],
-    ["minHeight", {prefix: 'min-h', scale: 'minHeight'}],
-    ["maxHeight", {prefix: 'max-h', scale: 'maxHeight'}],
+        // Spacing
+        ["padding", {prefix: 'p'}],
+        ["paddingX", {prefix: 'px'}],
+        ["paddingY", {prefix: 'py'}],
+        ["paddingTop", {prefix: 'pt'}],
+        ["paddingRight", {prefix: 'pr'}],
+        ["paddingBottom", {prefix: 'pb'}],
+        ["paddingLeft", {prefix: 'pl'}],
+        ["margin", {prefix: 'm'}],
+        ["marginX", {prefix: 'mx'}],
+        ["marginY", {prefix: 'my'}],
+        ["marginTop", {prefix: 'mt'}],
+        ["marginRight", {prefix: 'mr'}],
+        ["marginBottom", {prefix: 'mb'}],
+        ["marginLeft", {prefix: 'ml'}],
 
-    // Spacing
-    ["padding", {prefix: 'p', scale: 'padding'}],
-    ["paddingX", {prefix: 'px', scale: 'padding'}],
-    ["paddingY", {prefix: 'py', scale: 'padding'}],
-    ["paddingTop", {prefix: 'pt', scale: 'padding'}],
-    ["paddingRight", {prefix: 'pr', scale: 'padding'}],
-    ["paddingBottom", {prefix: 'pb', scale: 'padding'}],
-    ["paddingLeft", {prefix: 'pl', scale: 'padding'}],
-    ["margin", {prefix: 'm', scale: 'margin'}],
-    ["marginX", {prefix: 'mx', scale: 'margin'}],
-    ["marginY", {prefix: 'my', scale: 'margin'}],
-    ["marginTop", {prefix: 'mt', scale: 'margin'}],
-    ["marginRight", {prefix: 'mr', scale: 'margin'}],
-    ["marginBottom", {prefix: 'mb', scale: 'margin'}],
-    ["marginLeft", {prefix: 'ml', scale: 'margin'}],
+        // Typography
+        ["fontFamily", {prefix: 'font'}],
+        ["fontSize", {prefix: 'text'}],
+        ["fontWeight", {prefix: 'font'}],
+        ["letterSpacing", {prefix: 'tracking'}],
+        ["lineHeight", {prefix: 'leading'}],
+        ["textAlign", {prefix: 'text'}],
+        ["textDecoration", {prefix: 'underline'}],
+        ["textTransform", {prefix: 'uppercase'}],
+        ["textOverflow", {prefix: 'truncate'}],
+        ["whitespace", {prefix: 'whitespace'}],
+        ["wordBreak", {prefix: 'break'}],
 
-    // Typography
-    ["fontFamily", {prefix: 'font', scale: 'fontFamily'}],
-    ["fontSize", {prefix: 'text', scale: 'fontSize'}],
-    ["fontWeight", {prefix: 'font', scale: 'fontWeight'}],
-    ["letterSpacing", {prefix: 'tracking', scale: 'letterSpacing'}],
-    ["lineHeight", {prefix: 'leading', scale: 'lineHeight'}],
-    ["textAlign", {prefix: 'text', scale: 'textAlign'}],
-    ["textDecoration", {prefix: 'underline', scale: 'textDecoration'}],
-    ["textTransform", {prefix: 'uppercase', scale: 'textTransform'}],
-    ["textOverflow", {prefix: 'truncate', scale: 'textOverflow'}],
-    ["whitespace", {prefix: 'whitespace', scale: 'whitespace'}],
-    ["wordBreak", {prefix: 'break', scale: 'wordBreak'}],
+        // Interactivity
+        ["appearance", {prefix: 'appearance'}],
+        ["cursor", {prefix: 'cursor'}],
+        ["outline", {prefix: 'outline'}],
+        ["pointerEvents", {prefix: 'pointer-events'}],
+        ["resize", {prefix: 'resize'}],
+        ["userSelect", {prefix: 'select'}],
 
-    // Interactivity
-    ["appearance", {prefix: 'appearance', scale: 'appearance'}],
-    ["cursor", {prefix: 'cursor', scale: 'cursor'}],
-    ["outline", {prefix: 'outline', scale: 'outline'}],
-    ["pointerEvents", {prefix: 'pointer-events', scale: 'pointerEvents'}],
-    ["resize", {prefix: 'resize', scale: 'resize'}],
-    ["userSelect", {prefix: 'select', scale: 'userSelect'}],
-
-    // Transitions and Animations
-    ["transitionProperty", {prefix: 'transition', scale: 'transitionProperty'}],
-    ["transitionTimingFunction", {prefix: 'ease', scale: 'transitionTimingFunction'}],
-    ["transitionDuration", {prefix: 'duration', scale: 'transitionDuration'}],
-    ["transitionDelay", {prefix: 'delay', scale: 'transitionDelay'}],
-    ["animation", {prefix: 'animate', scale: 'animation'}]*/
+        // Transitions and Animations
+        ["transitionProperty", {prefix: 'transition'}],
+        ["transitionTimingFunction", {prefix: 'ease'}],
+        ["transitionDuration", {prefix: 'duration'}],
+        ["transitionDelay", {prefix: 'delay'}],
+        ["animation", {prefix: 'animate'}]*/
 ]);
 
 export const namedPlugins = new Map<string, { class: string }>([
@@ -344,13 +356,48 @@ export const namedPlugins = new Map<string, { class: string }>([
     ["ringOffsetPink", {class: 'ring-offset-pink'}]
 ])
 
-function filterMapByPrefix(map: Map<string, { prefix: string, scale: string }>, prefix: string) {
-    return Array.from(map.entries()).filter(([key, value]) => value.prefix === prefix);
-}
+export const variants = new Map<string, Variant["kind"]>([
+    ['first', 'static'],
+    ['last', 'static'],
+    ['only', 'static'],
+    ['odd', 'static'],
+    ['even', 'static'],
+    ['first-of-type', 'static'],
+    ['last-of-type', 'static'],
+    ['only-of-type', 'static'],
 
-/*export const possiblePlugins = (prefix: string) => {
-    return filterMapByPrefix(plugins, prefix);
-}*/
+    // State
+    ['visited', 'static'],
+    ['target', 'static'],
+    ['open', 'static'],
+
+    // Forms
+    ['default', 'static'],
+    ['checked', 'static'],
+    ['indeterminate', 'static'],
+    ['placeholder-shown', 'static'],
+    ['autofill', 'static'],
+    ['optional', 'static'],
+    ['required', 'static'],
+    ['valid', 'static'],
+    ['invalid', 'static'],
+    ['in-range', 'static'],
+    ['out-of-range', 'static'],
+    ['read-only', 'static'],
+
+    // Content
+    ['empty', 'static'],
+
+    // Interactive
+    ['focus-within', 'static'],
+    ['hover', 'static'],
+    ['group-hover', 'static'],
+    ['focus', 'static'],
+    ['focus-visible', 'static'],
+    ['active', 'static'],
+    ['enabled', 'static'],
+    ['disabled', 'static'],
+])
 
 export const findNamedProperty = (name: string) => {
     const classToKeyMap = new Map<string, string>();
