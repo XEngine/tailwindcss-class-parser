@@ -1,44 +1,36 @@
-import type {Variant} from "./utils/types";
 import {decodeArbitraryValue} from "./utils/decodeArbitraryValue";
-import {segment} from "./utils/segment";
-import {findRoot} from "./find-root";
-import {variants} from "./plugins";
+import {type Variant, variants} from "./plugins.ts";
+import type {ScreensConfig} from "tailwindcss/types/config";
 
-export function parseVariant(variant: string, screen?: string[]): Variant | null {
-    // Arbitrary variants
+export function parseVariant(variant: string, screens: ScreensConfig): Variant  {
     if (variant[0] === '[' && variant[variant.length - 1] === ']') {
-        if (variant[1] === '@' && variant.includes('&')) return null
-        let selector = decodeArbitraryValue(variant.slice(1, -1))
-        if (selector[0] !== '@') {
-            if (!selector.includes('&')) {
-                selector = `&:is(${selector})`
-            }
+        let arbitraryValue = variant.slice(1, -1)
+
+        if (arbitraryValue[0] === '-' && arbitraryValue[1] === '-') {
+            arbitraryValue = `var(${arbitraryValue})`
+        } else {
+            arbitraryValue = decodeArbitraryValue(arbitraryValue)
         }
 
         return {
             kind: 'arbitrary',
-            root: selector,
+            type: 'misc',
+            value: arbitraryValue,
         }
     }
 
-    let [variantWithoutModifier, , additionalModifier] = segment(variant, '/')
-    if (additionalModifier) return null
-
-    if(screen && screen.length > 0){
-        for(let breakpoint of screen){
-            variants.set(breakpoint, "media")
+    if(Object.keys(screens).includes(variant)) {
+        return {
+            kind: 'named',
+            type: 'media',
+            value: variant
         }
     }
 
-    let [root, value] = findRoot(variantWithoutModifier, variants)
-    // Variant is invalid, therefore the candidate is invalid, and we can skip
-    // continue parsing it.
-
-    if (root === null) return null
-    if (value !== null) return null
-
+    const matchedVariantType = variants.get(variant)
     return {
-        kind: variants.get(root) || 'static',
-        root,
+        kind: 'named',
+        type: matchedVariantType || 'misc',
+        value: variant,
     }
 }

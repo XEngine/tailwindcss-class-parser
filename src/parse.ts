@@ -1,13 +1,16 @@
-import type {CustomThemeConfig} from "tailwindcss/types/config"
-import resolveConfig from 'tailwindcss/resolveConfig';
 import {segment} from "./utils/segment";
-import {arbitraryParser} from "./arbitrary-parser";
 import {findRoot} from "./find-root";
-import type {Variant} from "./utils/types";
-import {functionalPlugins, namedPlugins} from "./plugins";
+import {type FunctionalPlugin, functionalPlugins, namedPlugins, type Variant} from "./plugins";
 import {determineUnitType} from "./utils/unit-type";
 import {parseVariant} from "./parse-variant";
-import {inferDataType} from "./utils/infer-data-type.ts";
+import {type DataType, inferDataType} from "./utils/infer-data-type.ts";
+import {getValue} from "./utils/value.ts";
+import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception.ts";
+import {IncorrectValueTypeException} from "./exceptions/incorrect-value-type-exception.ts";
+import {decodeArbitraryValue} from "./utils/decodeArbitraryValue.ts";
+import type {CustomThemeConfig, ScreensConfig} from "tailwindcss/types/config";
+import {getTailwindTheme} from "./theme.ts";
+import {isColor} from "./utils/is-color.ts";
 
 export type State = {
     important: boolean
@@ -15,10 +18,7 @@ export type State = {
 }
 
 export const parse = (input: string, config?: CustomThemeConfig) => {
-    //@ts-ignore
-    const parsedConfig = resolveConfig(config || {})
-    const theme = parsedConfig.theme
-
+    const theme = getTailwindTheme(config)
     let state: State = {
         important: false,
         negative: false
@@ -29,7 +29,7 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
     let parsedCandidateVariants: Variant[] = []
 
     for (let i = variants.length - 1; i >= 0; --i) {
-        let parsedVariant = parseVariant(variants[i], Object.keys(theme!["screens"] || {}))
+        let parsedVariant = parseVariant(variants[i], theme.screens as ScreensConfig)
         if (parsedVariant === null) return null
         parsedCandidateVariants.push(parsedVariant)
     }
@@ -44,12 +44,8 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
         base = base.slice(1)
     }
 
-    if (base[0] === '[') {
-        return arbitraryParser(base, state)
-    }
-
     const namedPlugin = namedPlugins.get(base)
-    if(namedPlugin){
+    if (namedPlugin) {
         return {
             root: base,
             kind: "static",
@@ -59,26 +55,28 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
                 raw: base,
                 value: namedPlugin.value,
             },
-            modifier: [],
+            modifier: parsedCandidateVariants,
             important: state.important,
             negative: state.negative
         }
     }
 
-    let valueDeclaration = {}
     let [root, value] = findRoot(base, functionalPlugins)
 
     if (!root) {
-        throw new Error(`Could not determine root from ${base}. Either you spelled it wrong or it's not in the lookup table`)
+        throw new PluginNotFoundException(base)
     }
-    //@ts-ignore
-    let unitType = determineUnitType(theme, value)
-    const plugins = functionalPlugins.get(root)
-    if (plugins && value && value[0] === '[' && value[value.length - 1] === ']') {
-        //arbitrary
+
+    const availablePlugins = functionalPlugins.get(root)
+    if (!availablePlugins) {
+        throw new PluginNotFoundException(base)
+    }
+
+    if (value && value[0] === '[' && value[value.length - 1] === ']') {
         let arbitraryValue = value.slice(1, -1)
-        unitType = inferDataType(arbitraryValue, [...plugins.values()].map(({type}) => type))
-        const associatedPluginByType = plugins!.find(plugin => plugin.type === unitType)
+        const unitType = inferDataType(arbitraryValue, [...availablePlugins.values()].map(({type}) => type))
+        const associatedPluginByType = availablePlugins!.find(plugin => plugin.type === unitType)
+
         return {
             root: root,
             property: associatedPluginByType!.ns,
@@ -88,50 +86,57 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
                 raw: value,
                 type: unitType
             },
-            modifier: [],
+            modifier: parsedCandidateVariants,
             arbitrary: true,
             important: state.important,
             negative: state.negative
         }
     }
 
-    const associatedPluginByType = plugins!.find(plugin => plugin.type === unitType)
+    //@ts-ignore
+    let isValueColor = isColor(value, theme)
 
-    if (!associatedPluginByType) {
-        throw new Error(`Could not find plugin by matching ${unitType}. Either you spelled it wrong or it's not a functional plugin`)
-    }
-
-    const scale = theme![associatedPluginByType.ns]
-
-    if (value) {
-        if (unitType === "color") {
-            const [color, shade] = segment(value, '-')
-            valueDeclaration = scale[color][shade]
-                ? {
-                    value: scale[color][shade],
-                    class: associatedPluginByType!.class,
-                    raw: value,
-                    type: 'color',
-                }
-                : {}
-        } else  {
-            valueDeclaration = {
-                value: scale[value],
-                class: associatedPluginByType!.class,
-                raw: value,
-                type: unitType
+    //we need to remove modifier from value
+    if (value && isValueColor) {
+        let [valueWithoutModifier, modifierSegment = null] = segment(value, '/')
+        value = valueWithoutModifier
+        if (modifierSegment) {
+            if (modifierSegment[0] === '[' && modifierSegment[modifierSegment.length - 1] === ']') {
+                parsedCandidateVariants.push({
+                    kind: 'arbitrary',
+                    type: "opacity",
+                    value: decodeArbitraryValue(modifierSegment.slice(1, -1)),
+                })
+            } else {
+                parsedCandidateVariants.push({
+                    kind: 'named',
+                    type: "opacity",
+                    value: modifierSegment,
+                })
             }
         }
     }
 
+    if(!value){
+        value = 'DEFAULT'
+    }
+    //check value against each scale of available plugins
+    let matchedPlugin = availablePlugins.find(({scaleKey}) => value.split('-')[0] in theme[scaleKey])
+    if (!matchedPlugin) {
+        throw new PluginNotFoundException(base)
+    }
+
     return {
         root: root,
-        property: associatedPluginByType.ns,
-        value: valueDeclaration,
+        property: matchedPlugin.ns,
+        value: getValue(value, matchedPlugin, theme[matchedPlugin.scaleKey]),
         modifier: parsedCandidateVariants,
         important: state.important,
         negative: state.negative
     }
 }
 
-console.log(parse("w-1/2"))
+console.log(parse("lg:hover:text-red-500"))
+console.log(parse("bg-gray-50/20"))
+console.log(parse("group-hover:h-6"))
+console.log(parse("hover:w-6"))

@@ -1,3 +1,6 @@
+import type {CustomThemeConfig} from "tailwindcss/types/config"
+import {segment} from "./segment.ts";
+
 const HASH = 0x23
 
 const NAMED_COLORS = new Set([
@@ -197,8 +200,17 @@ const NAMED_COLORS = new Set([
 
 const IS_COLOR_FN = /^(rgba?|hsla?|hwb|color|(ok)?(lab|lch)|light-dark|color-mix)\(/i
 
-export function isColor(value: string): boolean {
+export function isColor(value: string, theme?: CustomThemeConfig): boolean {
+    if (!value) return false
+
+    let isThemeColor = false
+
+    if (theme) {
+        const [trueValue,] = segment(value, '/')
+        isThemeColor = !!trueValue.split('-').reduce((acc, val) => acc[val], theme.colors as any);
+    }
+
     return (
-        value.charCodeAt(0) === HASH || IS_COLOR_FN.test(value) || NAMED_COLORS.has(value.toLowerCase())
+        value.charCodeAt(0) === HASH || IS_COLOR_FN.test(value) || NAMED_COLORS.has(value.toLowerCase()) || isThemeColor
     )
 }

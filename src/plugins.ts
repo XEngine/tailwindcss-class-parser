@@ -1,313 +1,369 @@
 import type {DataType} from "./utils/infer-data-type";
-import type {Variant} from "./utils/types";
+
+export type Variant = {
+    kind: 'arbitrary' | 'named',
+    type: 'opacity' | 'media' | 'pseudo' | 'content' | 'form' | 'state' | 'interaction' | 'misc'
+    value: string
+}
 
 export type FunctionalPlugin = {
-    class: string,
+    scaleKey: string,
+    class: string[],
     ns: string,
-    type: DataType
+    type: DataType,
     supportNegative?: boolean
 }
 
-export type NamedPlugin = {
+export type NamedPlugin ={
+    value: string
+    class: string[],
     ns: string,
-    value: string,
-    class: string
 }
 
 export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ["w", [
-        {ns: 'width', class: 'width', type: 'length'},
-        {ns: 'width', class: 'width', type: 'percentage'},
+        {scaleKey: "width", ns: 'width', class: ['width'], type: 'length'},
+    ]],
+    ["min-w", [
+        {scaleKey: "minWidth", ns: 'minWidth', class: ['min-width'], type: 'length'},
+    ]],
+    ["max-w", [
+        {scaleKey: "maxWidth", ns: 'maxWidth', class: ['max-width'], type: 'length'},
     ]],
     ["h", [
-        {ns: 'height', class: 'height', type: 'length'},
-        {ns: 'height', class: 'height', type: 'percentage'},
+        {scaleKey: "height", ns: 'height', class: ['height'], type: 'length'},
+    ]],
+    ["min-h", [
+        {scaleKey: "minHeight", ns: 'minHeight', class: ['min-height'], type: 'length'},
     ]],
     ["m", [
-        {ns: 'margin', class: 'margin', type: 'length'},
+        {scaleKey: "margin", ns: 'margin', class: ['margin'], type: 'length'},
     ]],
     ["mx", [
-        {ns: 'marginLeft', class: 'margin-left', type: 'length'},
-        {ns: 'marginRight', class: 'margin-right', type: 'length'},
+        {scaleKey: "margin", ns: 'marginX', class: ['margin-left', 'margin-right'], type: 'length'},
     ]],
     ["my", [
-        {ns: 'marginTop', class: 'margin-top', type: 'length'},
-        {ns: 'marginBottom', class: 'margin-bottom', type: 'length'},
+        {scaleKey: "margin", ns: 'marginY', class: ['margin-top', 'margin-bottom'], type: 'length'},
     ]],
     ["mt", [
-        {ns: 'marginTop', class: 'margin-top', type: 'length'},
+        {scaleKey: "margin", ns: 'marginTop', class: ['margin-top'], type: 'length'},
     ]],
     ["mr", [
-        {ns: 'marginRight', class: 'margin-right', type: 'length'},
+        {scaleKey: "margin", ns: 'marginRight', class: ['margin-right'], type: 'length'},
     ]],
     ["mb", [
-        {ns: 'marginBottom', class: 'margin-bottom', type: 'length'},
+        {scaleKey: "margin", ns: 'marginBottom', class: ['margin-bottom'], type: 'length'},
     ]],
     ["ml", [
-        {ns: 'marginLeft', class: 'margin-left', type: 'length'},
+        {scaleKey: "margin", ns: 'marginLeft', class: ['margin-left'], type: 'length'},
     ]],
     ["p", [
-        {ns: 'padding', class: 'padding', type: 'length'},
+        {scaleKey: "padding", ns: 'padding', class: ['padding'], type: 'length'},
     ]],
     ["px", [
-        {ns: 'paddingLeft', class: 'padding-left', type: 'length'},
-        {ns: 'paddingRight', class: 'padding-right', type: 'length'},
+        {scaleKey: "padding", ns: 'paddingX', class: ['padding-left', 'padding-right'], type: 'length'},
     ]],
     ["py", [
-        {ns: 'paddingTop', class: 'padding-top', type: 'length'},
-        {ns: 'paddingBottom', class: 'padding-bottom', type: 'length'},
+        {scaleKey: "padding", ns: 'paddingY', class: ['padding-top', 'padding-bottom'], type: 'length'},
     ]],
     ["pt", [
-        {ns: 'paddingTop', class: 'padding-top', type: 'length'},
+        {scaleKey: "padding", ns: 'paddingTop', class: ['padding-top'], type: 'length'},
     ]],
     ["pr", [
-        {ns: 'paddingRight', class: 'padding-right', type: 'length'},
+        {scaleKey: "padding", ns: 'paddingRight', class: ['padding-right'], type: 'length'},
     ]],
     ["pb", [
-        {ns: 'paddingBottom', class: 'padding-bottom', type: 'length'},
+        {scaleKey: "padding", ns: 'paddingBottom', class: ['padding-bottom'], type: 'length'},
     ]],
     ["pl", [
-        {ns: 'paddingLeft', class: 'padding-left', type: 'length'},
+        {scaleKey: "padding", ns: 'paddingLeft', class: ['padding-left'], type: 'length'},
     ]],
     ["text", [
-        {ns: 'fontSize', class: 'font-size', type: 'length'},
-        {ns: 'color', class: 'color', type: 'color'},
+        {scaleKey: "fontSize", ns: 'fontSize', class: ['font-size'], type: 'length'},
+        {scaleKey: "textColor", ns: 'textColor', class: ['color'], type: 'color'},
     ]],
     ["font", [
-        {ns: 'fontWeight', class: 'font-weight', type: 'number'},
-        {ns: 'fontFamily', class: 'font-family', type: 'family-name'},
+        {scaleKey: "fontWeight", ns: 'fontWeight', class: ['font-weight'], type: 'number'},
+        {scaleKey: "fontFamily", ns: 'fontFamily', class: ['font-family'], type: 'family-name'},
     ]],
     ["leading", [
-        {ns: 'lineHeight', class: 'line-height', type: 'number'},
+        {scaleKey: "lineHeight", ns: 'lineHeight', class: ['line-height'], type: 'number'},
     ]],
     ["tracking", [
-        {ns: 'letterSpacing', class: 'letter-spacing', type: 'length'},
+        {scaleKey: "letterSpacing", ns: 'letterSpacing', class: ['letter-spacing'], type: 'length'},
     ]],
     ["bg", [
-        {ns: 'backgroundImage', class: 'background-image', type: 'image'},
-        {ns: 'backgroundPosition', class: 'background-position', type: 'position'},
-        {ns: 'backgroundSize', class: 'background-size', type: 'bg-size'},
-        {ns: 'backgroundColor', class: 'background-color', type: 'color'},
+        {scaleKey: "backgroundImage", ns: 'backgroundImage', class: ['background-image'], type: 'image'},
+        {scaleKey: "backgroundPosition", ns: 'backgroundPosition', class: ['background-position'], type: 'position'},
+        {scaleKey: "backgroundSize", ns: 'backgroundSize', class: ['background-size'], type: 'bg-size'},
+        {scaleKey: "backgroundColor", ns: 'backgroundColor', class: ['background-color'], type: 'color'},
+    ]],
+    ["fill", [
+        {scaleKey: "fill", ns: 'fillColor', class: ['fill'], type: 'color'},
+    ]],
+    ["stroke", [
+        {scaleKey: "strokeWidth", ns: 'strokeWidth', class: ['stroke-width'], type: 'line-width'},
+        {scaleKey: "stroke", ns: 'strokeColor', class: ['border-color'], type: 'color'},
     ]],
     ["border", [
-        {ns: 'borderWidth', class: 'border-width', type: 'line-width'},
-        {ns: 'borderColor', class: 'border-color', type: 'color'},
-        {ns: 'borderStyle', class: 'border-style', type: 'line-width'},
+        {scaleKey: "borderWidth", ns: 'borderWidth', class: ['border-width'], type: 'line-width'},
+        {scaleKey: "borderColor", ns: 'borderColor', class: ['border-color'], type: 'color'},
+        {scaleKey: "borderStyle", ns: 'borderStyle', class: ['border-style'], type: 'line-width'},
+    ]],
+    ["ring", [
+        {scaleKey: "ringWidth", ns: 'ringWidth', class: ['box-shadow'], type: 'line-width'},
+        {scaleKey: "ringColor", ns: 'ringColor', class: ['--tw-ring-color'], type: 'color'},
+    ]],
+    ["ring-offset", [
+        {scaleKey: "ringOffsetWidth", ns: 'ringOffsetWidth', class: ['--tw-ring-offset-width'], type: 'line-width'},
+        {scaleKey: "ringOffsetColor", ns: 'ringOffsetColor', class: ['--tw-ring-offset-color'], type: 'color'},
     ]],
     ["rounded", [
-        {ns: 'borderRadius', class: 'border-radius', type: 'length'},
+        {scaleKey: "borderRadius", ns: 'borderRadius', class: ['border-radius'], type: 'length'},
     ]],
     ["flex", [
-        {ns: 'flex', class: 'flex', type: 'number'},
+        {scaleKey: "flex", ns: 'flex', class: ['flex'], type: 'number'},
     ]],
-    ["grid", [
-        {ns: 'gridTemplateColumns', class: 'grid-template-columns', type: 'number'},
-        {ns: 'gridTemplateRows', class: 'grid-template-rows', type: 'number'},
+    ["grid-cols", [
+        {scaleKey: "gridTemplateColumns", ns: 'gridTemplateColumns', class: ['grid-template-columns'], type: 'number'},
+    ]],
+    ["grid-rows", [
+        {scaleKey: "gridTemplateRows", ns: 'gridTemplateRows', class: ['grid-template-rows'], type: 'number'},
     ]],
     ["gap", [
-        {ns: 'gap', class: 'gap', type: 'length'},
+        {scaleKey: "gap", ns: 'gap', class: ['gap'], type: 'length'},
     ]],
     ["col", [
-        {ns: 'gridColumn', class: 'grid-column', type: 'number'},
+        {scaleKey: "gridColumn", ns: 'gridColumn', class: ['grid-column'], type: 'number'},
     ]],
     ["row", [
-        {ns: 'gridRow', class: 'grid-row', type: 'number'},
+        {scaleKey: "gridRow", ns: 'gridRow', class: ['grid-row'], type: 'number'},
+    ]],
+    ["space-x", [
+        {scaleKey: "spacing", ns: 'spaceX', class: ['margin-left'], type: 'number'},
+    ]],
+    ["space-y", [
+        {scaleKey: "spacing", ns: 'spaceY', class: ['margin-top'], type: 'number'},
     ]],
     ["opacity", [
-        {ns: 'opacity', class: 'opacity', type: 'number'},
+        {scaleKey: "opacity", ns: 'opacity', class: ['opacity'], type: 'number'},
     ]],
     ["shadow", [
-        {ns: 'boxShadow', class: 'box-shadow', type: 'length'},
+        {scaleKey: "boxShadow", ns: 'boxShadow', class: ['box-shadow'], type: 'length'},
     ]],
     ["transition", [
-        {ns: 'transitionProperty', class: 'transition-property', type: 'number'},
-        {ns: 'transitionDuration', class: 'transition-duration', type: 'number'},
+        {scaleKey: "transitionProperty", ns: 'transitionProperty', class: ['transition-property'], type: 'number'},
+        {scaleKey: "transitionDuration", ns: 'transitionDuration', class: ['transition-duration'], type: 'number'},
     ]],
     ["scale", [
-        {ns: 'scale', class: 'scale', type: 'number'},
+        {scaleKey: "scale", ns: 'scale', class: ['scale'], type: 'number'},
     ]],
     ["rotate", [
-        {ns: 'rotate', class: 'rotate', type: 'angle'},
+        {scaleKey: "rotate", ns: 'rotate', class: ['rotate'], type: 'angle'},
     ]],
     ["translate", [
-        {ns: 'translate', class: 'translate', type: 'length'},
-        {ns: 'translate', class: 'translate', type: 'percentage'},
+        {scaleKey: "translate", ns: 'translate', class: ['transform'], type: 'length'},
+    ]],
+    ["translate-y", [
+        {scaleKey: "translate", ns: 'translateY', class: ['transform'], type: 'length'},
+    ]],
+    ["translate-x", [
+        {scaleKey: "translate", ns: 'translateX', class: ['transform'], type: 'length'},
     ]],
     ["skew", [
-        {ns: 'skew', class: 'skew', type: 'angle'},
-    ]],
-    ["inset", [
-        {ns: 'top', class: 'top', type: 'length'},
-        {ns: 'right', class: 'right', type: 'length'},
-        {ns: 'bottom', class: 'bottom', type: 'length'},
-        {ns: 'left', class: 'left', type: 'length'},
+        {scaleKey: "skew", ns: 'skew', class: ['skew'], type: 'angle'},
     ]],
     ["z", [
-        {ns: 'zIndex', class: 'z-index', type: 'number'},
+        {scaleKey: "zIndex", ns: 'zIndex', class: ['z-index'], type: 'number'},
+    ]],
+    ["inset", [
+        {scaleKey: "inset", ns: 'inset', class: ['inset'], type: 'length'},
+    ]],
+    ["inset-x", [
+        {scaleKey: "inset", ns: 'insetX', class: ['inset-x'], type: 'length'},
+    ]],
+    ["inset-x", [
+        {scaleKey: "inset", ns: 'insetY', class: ['inset'], type: 'length'},
+    ]],
+    ["inset-x", [
+        {scaleKey: "inset", ns: 'insetX', class: ['left', 'right'], type: 'length'},
+    ]],
+    ["inset-x", [
+        {scaleKey: "inset", ns: 'insetY', class: ['top', 'bottom'], type: 'length'},
+    ]],
+    ["top", [
+        {scaleKey: "inset", ns: 'positionTop', class: ['top'], type: 'length'},
+    ]],
+    ["right", [
+        {scaleKey: "inset", ns: 'positionRight', class: ['right'], type: 'length'},
+    ]],
+    ["bottom", [
+        {scaleKey: "inset", ns: 'positionBottom', class: ['bottom'], type: 'length'},
+    ]],
+    ["left", [
+        {scaleKey: "inset", ns: 'positionLeft', class: ['left'], type: 'length'},
+    ]],
+    ["start", [
+        {scaleKey: "inset", ns: 'insetInlineStart', class: ['inset-inline-start'], type: 'length'},
+    ]],
+    ["end", [
+        {scaleKey: "inset", ns: 'insetInlineEnd', class: ['inset-inline-end'], type: 'length'},
     ]],
 ]);
 
 export const namedPlugins = new Map<string, NamedPlugin>([
     // Border Styles
-    ["border-solid", {class: 'border-style', value: 'solid', ns: 'borderStyle'}],
-    ["border-dashed", {class: 'border-style', value: 'dashed', ns: 'borderStyle'}],
-    ["border-dotted", {class: 'border-style', value: 'dotted', ns: 'borderStyle'}],
-    ["border-double", {class: 'border-style', value: 'double', ns: 'borderStyle'}],
-    ["border-none", {class: 'border-style', value: 'none', ns: 'borderStyle'}],
+    ["border-solid", {class: ['border-style'], value: 'solid', ns: 'border'}],
+    ["border-dashed", {class: ['border-style'], value: 'dashed', ns: 'border'}],
+    ["border-dotted", {class: ['border-style'], value: 'dotted', ns: 'border'}],
+    ["border-double", {class: ['border-style'], value: 'double', ns: 'border'}],
+    ["border-none", {class: ['border-style'], value: 'none', ns: 'border'}],
+    ["ring-inset", {class: ['--tw-ring-inset'], value: 'inset', ns: 'ring'}],
 
     // Display
-    ["block", {class: 'display', value: 'block', ns: 'display'}],
-    ["inline-block", {class: 'display', value: 'inline-block', ns: 'display'}],
-    ["inline", {class: 'display', value: 'inline', ns: 'display'}],
-    ["flex", {class: 'display', value: 'flex', ns: 'display'}],
-    ["grid", {class: 'display', value: 'grid', ns: 'display'}],
-    ["hidden", {class: 'display', value: 'none', ns: 'display'}],
-    ["table", {class: 'display', value: 'table', ns: 'display'}],
-    ["table-row", {class: 'display', value: 'table-row', ns: 'display'}],
-    ["table-cell", {class: 'display', value: 'table-cell', ns: 'display'}],
-    ["contents", {class: 'display', value: 'contents', ns: 'display'}],
-    ["list-item", {class: 'display', value: 'list-item', ns: 'display'}],
-    ["flow-root", {class: 'display', value: 'flow-root', ns: 'display'}],
+    ["block", {class: ['display'], value: 'block', ns: 'display'}],
+    ["inline-block", {class: ['display'], value: 'inline-block', ns: 'display'}],
+    ["inline", {class: ['display'], value: 'inline', ns: 'display'}],
+    ["flex", {class: ['display'], value: 'flex', ns: 'display'}],
+    ["grid", {class: ['display'], value: 'grid', ns: 'display'}],
+    ["hidden", {class: ['display'], value: 'none', ns: 'display'}],
+    ["table", {class: ['display'], value: 'table', ns: 'display'}],
+    ["table-row", {class: ['display'], value: 'table-row', ns: 'display'}],
+    ["table-cell", {class: ['display'], value: 'table-cell', ns: 'display'}],
+    ["contents", {class: ['display'], value: 'contents', ns: 'display'}],
+    ["list-item", {class: ['display'], value: 'list-item', ns: 'display'}],
+    ["flow-root", {class: ['display'], value: 'flow-root', ns: 'display'}],
 
     // Visibility
-    ["visible", {class: 'visibility', value: 'visible', ns: 'visibility'}],
-    ["invisible", {class: 'visibility', value: 'hidden', ns: 'visibility'}],
+    ["visible", {class: ['visibility'], value: 'visible', ns: 'visibility'}],
+    ["invisible", {class: ['visibility'], value: 'hidden', ns: 'visibility'}],
 
     // Position
-    ["static", {class: 'position', value: 'static', ns: 'position'}],
-    ["fixed", {class: 'position', value: 'fixed', ns: 'position'}],
-    ["absolute", {class: 'position', value: 'absolute', ns: 'position'}],
-    ["relative", {class: 'position', value: 'relative', ns: 'position'}],
-    ["sticky", {class: 'position', value: 'sticky', ns: 'position'}],
+    ["static", {class: ['position'], value: 'static', ns: 'position'}],
+    ["fixed", {class: ['position'], value: 'fixed', ns: 'position'}],
+    ["absolute", {class: ['position'], value: 'absolute', ns: 'position'}],
+    ["relative", {class: ['position'], value: 'relative', ns: 'position'}],
+    ["sticky", {class: ['position'], value: 'sticky', ns: 'position'}],
 
     // Overflow
-    ["overflow-auto", {class: 'overflow', value: 'auto', ns: 'overflow'}],
-    ["overflow-hidden", {class: 'overflow', value: 'hidden', ns: 'overflow'}],
-    ["overflow-visible", {class: 'overflow', value: 'visible', ns: 'overflow'}],
-    ["overflow-scroll", {class: 'overflow', value: 'scroll', ns: 'overflow'}],
-    ["overflow-x-auto", {class: 'overflow-x', value: 'auto', ns: 'overflowX'}],
-    ["overflow-x-hidden", {class: 'overflow-x', value: 'hidden', ns: 'overflowX'}],
-    ["overflow-x-visible", {class: 'overflow-x', value: 'visible', ns: 'overflowX'}],
-    ["overflow-x-scroll", {class: 'overflow-x', value: 'scroll', ns: 'overflowX'}],
-    ["overflow-y-auto", {class: 'overflow-y', value: 'auto', ns: 'overflowY'}],
-    ["overflow-y-hidden", {class: 'overflow-y', value: 'hidden', ns: 'overflowY'}],
-    ["overflow-y-visible", {class: 'overflow-y', value: 'visible', ns: 'overflowY'}],
-    ["overflow-y-scroll", {class: 'overflow-y', value: 'scroll', ns: 'overflowY'}],
+    ["overflow-auto", {class: ['overflow'], value: 'auto', ns: 'overflow'}],
+    ["overflow-hidden", {class: ['overflow'], value: 'hidden', ns: 'overflow'}],
+    ["overflow-visible", {class: ['overflow'], value: 'visible', ns: 'overflow'}],
+    ["overflow-scroll", {class: ['overflow'], value: 'scroll', ns: 'overflow'}],
+    ["overflow-x-auto", {class: ['overflow-x'], value: 'auto', ns: 'overflowX'}],
+    ["overflow-x-hidden", {class: ['overflow-x'], value: 'hidden', ns: 'overflowX'}],
+    ["overflow-x-visible", {class: ['overflow-x'], value: 'visible', ns: 'overflowX'}],
+    ["overflow-x-scroll", {class: ['overflow-x'], value: 'scroll', ns: 'overflowX'}],
+    ["overflow-y-auto", {class: ['overflow-y'], value: 'auto', ns: 'overflowY'}],
+    ["overflow-y-hidden", {class: ['overflow-y'], value: 'hidden', ns: 'overflowY'}],
+    ["overflow-y-visible", {class: ['overflow-y'], value: 'visible', ns: 'overflowY'}],
+    ["overflow-y-scroll", {class: ['overflow-y'], value: 'scroll', ns: 'overflowY'}],
 
     // Text Decoration
-    ["underline", {class: 'text-decoration', value: 'underline', ns: 'textDecoration'}],
-    ["line-through", {class: 'text-decoration', value: 'line-through', ns: 'textDecoration'}],
-    ["no-underline", {class: 'text-decoration', value: 'none', ns: 'textDecoration'}],
+    ["underline", {class: ['text-decoration'], value: 'underline', ns: 'textDecoration'}],
+    ["line-through", {class: ['text-decoration'], value: 'line-through', ns: 'textDecoration'}],
+    ["no-underline", {class: ['text-decoration'], value: 'none', ns: 'textDecoration'}],
 
     // Text Transform
-    ["uppercase", {class: 'text-transform', value: 'uppercase', ns: 'textTransform'}],
-    ["lowercase", {class: 'text-transform', value: 'lowercase', ns: 'textTransform'}],
-    ["capitalize", {class: 'text-transform', value: 'capitalize', ns: 'textTransform'}],
-    ["normal-case", {class: 'text-transform', value: 'none', ns: 'textTransform'}],
+    ["uppercase", {class: ['text-transform'], value: 'uppercase', ns: 'textTransform'}],
+    ["lowercase", {class: ['text-transform'], value: 'lowercase', ns: 'textTransform'}],
+    ["capitalize", {class: ['text-transform'], value: 'capitalize', ns: 'textTransform'}],
+    ["normal-case", {class: ['text-transform'], value: 'none', ns: 'textTransform'}],
 
     // Font Style
-    ["italic", {class: 'font-style', value: 'italic', ns: 'fontStyle'}],
-    ["not-italic", {class: 'font-style', value: 'normal', ns: 'fontStyle'}],
+    ["italic", {class: ['font-style'], value: 'italic', ns: 'fontStyle'}],
+    ["not-italic", {class: ['font-style'], value: 'normal', ns: 'fontStyle'}],
 
     // Background Attachment
-    ["bg-fixed", {class: 'background-attachment', value: 'fixed', ns: 'backgroundAttachment'}],
-    ["bg-local", {class: 'background-attachment', value: 'local', ns: 'backgroundAttachment'}],
-    ["bg-scroll", {class: 'background-attachment', value: 'scroll', ns: 'backgroundAttachment'}],
+    ["bg-fixed", {class: ['background-attachment'], value: 'fixed', ns: 'backgroundAttachment'}],
+    ["bg-local", {class: ['background-attachment'], value: 'local', ns: 'backgroundAttachment'}],
+    ["bg-scroll", {class: ['background-attachment'], value: 'scroll', ns: 'backgroundAttachment'}],
 
     // Background Repeat
-    ["bg-repeat", {class: 'background-repeat', value: 'repeat', ns: 'backgroundRepeat'}],
-    ["bg-no-repeat", {class: 'background-repeat', value: 'no-repeat', ns: 'backgroundRepeat'}],
-    ["bg-repeat-x", {class: 'background-repeat', value: 'repeat-x', ns: 'backgroundRepeat'}],
-    ["bg-repeat-y", {class: 'background-repeat', value: 'repeat-y', ns: 'backgroundRepeat'}],
-    ["bg-repeat-round", {class: 'background-repeat', value: 'round', ns: 'backgroundRepeat'}],
-    ["bg-repeat-space", {class: 'background-repeat', value: 'space', ns: 'backgroundRepeat'}],
+    ["bg-repeat", {class: ['background-repeat'], value: 'repeat', ns: 'backgroundRepeat'}],
+    ["bg-no-repeat", {class: ['background-repeat'], value: 'no-repeat', ns: 'backgroundRepeat'}],
+    ["bg-repeat-x", {class: ['background-repeat'], value: 'repeat-x', ns: 'backgroundRepeat'}],
+    ["bg-repeat-y", {class: ['background-repeat'], value: 'repeat-y', ns: 'backgroundRepeat'}],
+    ["bg-repeat-round", {class: ['background-repeat'], value: 'round', ns: 'backgroundRepeat'}],
+    ["bg-repeat-space", {class: ['background-repeat'], value: 'space', ns: 'backgroundRepeat'}],
 
     // Flex Direction
-    ["flex-row", {class: 'flex-direction', value: 'row', ns: 'flexDirection'}],
-    ["flex-row-reverse", {class: 'flex-direction', value: 'row-reverse', ns: 'flexDirection'}],
-    ["flex-col", {class: 'flex-direction', value: 'column', ns: 'flexDirection'}],
-    ["flex-col-reverse", {class: 'flex-direction', value: 'column-reverse', ns: 'flexDirection'}],
+    ["flex-row", {class: ['flex-direction'], value: 'row', ns: 'flexDirection'}],
+    ["flex-row-reverse", {class: ['flex-direction'], value: 'row-reverse', ns: 'flexDirection'}],
+    ["flex-col", {class: ['flex-direction'], value: 'column', ns: 'flexDirection'}],
+    ["flex-col-reverse", {class: ['flex-direction'], value: 'column-reverse', ns: 'flexDirection'}],
 
     // Flex Wrap
-    ["flex-wrap", {class: 'flex-wrap', value: 'wrap', ns: 'flexWrap'}],
-    ["flex-wrap-reverse", {class: 'flex-wrap', value: 'wrap-reverse', ns: 'flexWrap'}],
-    ["flex-nowrap", {class: 'flex-wrap', value: 'nowrap', ns: 'flexWrap'}],
+    ["flex-wrap", {class: ['flex-wrap'], value: 'wrap', ns: 'flexWrap'}],
+    ["flex-wrap-reverse", {class: ['flex-wrap'], value: 'wrap-reverse', ns: 'flexWrap'}],
+    ["flex-nowrap", {class: ['flex-wrap'], value: 'nowrap', ns: 'flexWrap'}],
 
     // Align Items
-    ["items-start", {class: 'align-items', value: 'flex-start', ns: 'alignItems'}],
-    ["items-end", {class: 'align-items', value: 'flex-end', ns: 'alignItems'}],
-    ["items-center", {class: 'align-items', value: 'center', ns: 'alignItems'}],
-    ["items-baseline", {class: 'align-items', value: 'baseline', ns: 'alignItems'}],
-    ["items-stretch", {class: 'align-items', value: 'stretch', ns: 'alignItems'}],
+    ["items-start", {class: ['align-items'], value: 'flex-start', ns: 'alignItems'}],
+    ["items-end", {class: ['align-items'], value: 'flex-end', ns: 'alignItems'}],
+    ["items-center", {class: ['align-items'], value: 'center', ns: 'alignItems'}],
+    ["items-baseline", {class: ['align-items'], value: 'baseline', ns: 'alignItems'}],
+    ["items-stretch", {class: ['align-items'], value: 'stretch', ns: 'alignItems'}],
 
     // Justify Content
-    ["justify-start", {class: 'justify-content', value: 'flex-start', ns: 'justifyContent'}],
-    ["justify-end", {class: 'justify-content', value: 'flex-end', ns: 'justifyContent'}],
-    ["justify-center", {class: 'justify-content', value: 'center', ns: 'justifyContent'}],
-    ["justify-between", {class: 'justify-content', value: 'space-between', ns: 'justifyContent'}],
-    ["justify-around", {class: 'justify-content', value: 'space-around', ns: 'justifyContent'}],
-    ["justify-evenly", {class: 'justify-content', value: 'space-evenly', ns: 'justifyContent'}],
+    ["justify-start", {class: ['justify-content'], value: 'flex-start', ns: 'justifyContent'}],
+    ["justify-end", {class: ['justify-content'], value: 'flex-end', ns: 'justifyContent'}],
+    ["justify-center", {class: ['justify-content'], value: 'center', ns: 'justifyContent'}],
+    ["justify-between", {class: ['justify-content'], value: 'space-between', ns: 'justifyContent'}],
+    ["justify-around", {class: ['justify-content'], value: 'space-around', ns: 'justifyContent'}],
+    ["justify-evenly", {class: ['justify-content'], value: 'space-evenly', ns: 'justifyContent'}],
 
     // Flex Grow & Shrink
-    ["flex-grow", {class: 'flex-grow', value: '1', ns: 'flexGrow'}],
-    ["flex-grow-0", {class: 'flex-grow', value: '0', ns: 'flexGrow'}],
-    ["grow", {class: 'flex-grow', value: '1', ns: 'flexGrow'}],
-    ["grow-0", {class: 'flex-grow', value: '0', ns: 'flexGrow'}],
-    ["flex-shrink", {class: 'flex-shrink', value: '1', ns: 'flexShrink'}],
-    ["flex-shrink-0", {class: 'flex-shrink', value: '0', ns: 'flexShrink'}],
-    ["shrink", {class: 'flex-shrink', value: '1', ns: 'flexShrink'}],
-    ["shrink-0", {class: 'flex-shrink', value: '0', ns: 'flexShrink'}],
+    ["flex-grow", {class: ['flex-grow'], value: '1', ns: 'flexGrow'}],
+    ["flex-grow-0", {class: ['flex-grow'], value: '0', ns: 'flexGrow'}],
+    ["grow", {class: ['flex-grow'], value: '1', ns: 'flexGrow'}],
+    ["grow-0", {class: ['flex-grow'], value: '0', ns: 'flexGrow'}],
+    ["flex-shrink", {class: ['flex-shrink'], value: '1', ns: 'flexShrink'}],
+    ["flex-shrink-0", {class: ['flex-shrink'], value: '0', ns: 'flexShrink'}],
+    ["shrink", {class: ['flex-shrink'], value: '1', ns: 'flexShrink'}],
+    ["shrink-0", {class: ['flex-shrink'], value: '0', ns: 'flexShrink'}],
 
 ])
 
-
-export const variants = new Map<string, Variant["kind"]>([
-    ['first', 'static'],
-    ['last', 'static'],
-    ['only', 'static'],
-    ['odd', 'static'],
-    ['even', 'static'],
-    ['first-of-type', 'static'],
-    ['last-of-type', 'static'],
-    ['only-of-type', 'static'],
+export const variants = new Map<string, Variant["type"]>([
+    ['first', 'pseudo'],
+    ['last', 'pseudo'],
+    ['only', 'pseudo'],
+    ['odd', 'pseudo'],
+    ['even', 'pseudo'],
+    ['first-of-type', 'pseudo'],
+    ['last-of-type', 'pseudo'],
+    ['only-of-type', 'pseudo'],
 
     // State
-    ['visited', 'static'],
-    ['target', 'static'],
-    ['open', 'static'],
+    ['visited', 'state'],
+    ['target', 'state'],
+    ['open', 'state'],
 
     // Forms
-    ['default', 'static'],
-    ['checked', 'static'],
-    ['indeterminate', 'static'],
-    ['placeholder-shown', 'static'],
-    ['autofill', 'static'],
-    ['optional', 'static'],
-    ['required', 'static'],
-    ['valid', 'static'],
-    ['invalid', 'static'],
-    ['in-range', 'static'],
-    ['out-of-range', 'static'],
-    ['read-only', 'static'],
+    ['default', 'form'],
+    ['checked', 'form'],
+    ['indeterminate', 'form'],
+    ['placeholder-shown', 'form'],
+    ['autofill', 'form'],
+    ['optional', 'form'],
+    ['required', 'form'],
+    ['valid', 'form'],
+    ['invalid', 'form'],
+    ['in-range', 'form'],
+    ['out-of-range', 'form'],
+    ['read-only', 'form'],
 
     // Content
-    ['empty', 'static'],
+    ['empty', 'content'],
 
     // Interactive
-    ['focus-within', 'static'],
-    ['hover', 'static'],
-    ['group-hover', 'static'],
-    ['focus', 'static'],
-    ['focus-visible', 'static'],
-    ['active', 'static'],
-    ['enabled', 'static'],
-    ['disabled', 'static'],
+    ['focus-within', 'interaction'],
+    ['hover', 'interaction'],
+    ['group-hover', 'interaction'],
+    ['focus', 'interaction'],
+    ['focus-visible', 'interaction'],
+    ['active', 'interaction'],
+    ['enabled', 'interaction'],
+    ['disabled', 'interaction'],
 ])
-
-export const findNamedProperty = (name: string) => {
-    const classToKeyMap = new Map<string, string>();
-    for (const [key, value] of namedPlugins) {
-        classToKeyMap.set(value.class, key);
-    }
-    return classToKeyMap.get(name);
-}

@@ -1,6 +1,6 @@
 import {segment} from "./utils/segment";
 import {decodeArbitraryValue} from "./utils/decodeArbitraryValue";
-import {parseModifier} from "./parse-modifier";
+import {parseModifier} from "./parse-variant.ts";
 import type {State} from "./parse";
 
 const DASH = 0x2d
