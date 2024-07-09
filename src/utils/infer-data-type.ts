@@ -223,7 +223,7 @@ function isLength(value: string): boolean {
 function isBackgroundPosition(value: string): boolean {
     let count = 0
 
-    for (let part of segment(value, '-')) {
+    for (let part of segment(value, ' ')) {
         if (
             part === 'center' ||
             part === 'top' ||
@@ -281,7 +281,6 @@ function isBackgroundSize(value: string) {
 
         if (values.every((value) => value === 'auto' || isLength(value) || isPercentage(value))) {
             count += 1
-            continue
         }
     }
 

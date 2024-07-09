@@ -1,9 +1,8 @@
-import {segment} from "./utils/segment.ts";
-import {decodeArbitraryValue} from "./utils/decodeArbitraryValue.ts";
-import {parseModifier} from "./parse-modifier.ts";
-import type {State} from "./parse.ts";
+import {segment} from "./utils/segment";
+import {decodeArbitraryValue} from "./utils/decodeArbitraryValue";
+import {parseModifier} from "./parse-modifier";
+import type {State} from "./parse";
 
-const COLON = 0x3a
 const DASH = 0x2d
 const LOWER_A = 0x61
 const LOWER_Z = 0x7a

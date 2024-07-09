@@ -1,8 +1,8 @@
-import type {Variant} from "./utils/types.ts";
-import {decodeArbitraryValue} from "./utils/decodeArbitraryValue.ts";
-import {segment} from "./utils/segment.ts";
-import {findRoot} from "./find-root.ts";
-import {variants} from "./plugins.ts";
+import type {Variant} from "./utils/types";
+import {decodeArbitraryValue} from "./utils/decodeArbitraryValue";
+import {segment} from "./utils/segment";
+import {findRoot} from "./find-root";
+import {variants} from "./plugins";
 
 export function parseVariant(variant: string, screen?: string[]): Variant | null {
     // Arbitrary variants
@@ -21,7 +21,7 @@ export function parseVariant(variant: string, screen?: string[]): Variant | null
         }
     }
 
-    let [variantWithoutModifier, modifier = null, additionalModifier] = segment(variant, '/')
+    let [variantWithoutModifier, , additionalModifier] = segment(variant, '/')
     if (additionalModifier) return null
 
     if(screen && screen.length > 0){

@@ -1,26 +1,17 @@
-import type {Config, CustomThemeConfig, ThemeConfig} from "tailwindcss/types/config"
+import type {CustomThemeConfig} from "tailwindcss/types/config"
 import resolveConfig from 'tailwindcss/resolveConfig';
-import {segment} from "./utils/segment.ts";
-import {arbitraryParser} from "./arbitrary-parser.ts";
-import {findRoot} from "./find-root.ts";
-import type {Variant} from "./utils/types.ts";
-import {functionalPlugins, variants} from "./plugins";
+import {segment} from "./utils/segment";
+import {arbitraryParser} from "./arbitrary-parser";
+import {findRoot} from "./find-root";
+import type {Variant} from "./utils/types";
+import {functionalPlugins, namedPlugins} from "./plugins";
 import {determineUnitType} from "./utils/unit-type";
 import {parseVariant} from "./parse-variant";
+import {inferDataType} from "./utils/infer-data-type.ts";
 
 export type State = {
     important: boolean
     negative: boolean
-}
-
-export type NamedModifier = {
-    kind: 'named'
-    value: string
-}
-export type ArbitraryModifier = {
-    kind: 'arbitrary'
-    value: string
-    dashedIdent: string | null
 }
 
 export const parse = (input: string, config?: CustomThemeConfig) => {
@@ -43,7 +34,6 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
         parsedCandidateVariants.push(parsedVariant)
     }
 
-    //check if we have a negativeness
     if (base[0] === '!') {
         state.important = true
         base = base.slice(1)
@@ -58,18 +48,57 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
         return arbitraryParser(base, state)
     }
 
+    const namedPlugin = namedPlugins.get(base)
+    if(namedPlugin){
+        return {
+            root: base,
+            kind: "static",
+            property: namedPlugin!.ns,
+            value: {
+                class: namedPlugin.class,
+                raw: base,
+                value: namedPlugin.value,
+            },
+            modifier: [],
+            important: state.important,
+            negative: state.negative
+        }
+    }
+
     let valueDeclaration = {}
     let [root, value] = findRoot(base, functionalPlugins)
+
     if (!root) {
-        throw new Error("Could not determine root")
+        throw new Error(`Could not determine root from ${base}. Either you spelled it wrong or it's not in the lookup table`)
     }
     //@ts-ignore
-    const unitType = determineUnitType(theme, value)
+    let unitType = determineUnitType(theme, value)
     const plugins = functionalPlugins.get(root)
+    if (plugins && value && value[0] === '[' && value[value.length - 1] === ']') {
+        //arbitrary
+        let arbitraryValue = value.slice(1, -1)
+        unitType = inferDataType(arbitraryValue, [...plugins.values()].map(({type}) => type))
+        const associatedPluginByType = plugins!.find(plugin => plugin.type === unitType)
+        return {
+            root: root,
+            property: associatedPluginByType!.ns,
+            value: {
+                value: arbitraryValue,
+                class: associatedPluginByType!.class,
+                raw: value,
+                type: unitType
+            },
+            modifier: [],
+            arbitrary: true,
+            important: state.important,
+            negative: state.negative
+        }
+    }
+
     const associatedPluginByType = plugins!.find(plugin => plugin.type === unitType)
 
     if (!associatedPluginByType) {
-        throw new Error("Could not find plugin")
+        throw new Error(`Could not find plugin by matching ${unitType}. Either you spelled it wrong or it's not a functional plugin`)
     }
 
     const scale = theme![associatedPluginByType.ns]
@@ -80,6 +109,7 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
             valueDeclaration = scale[color][shade]
                 ? {
                     value: scale[color][shade],
+                    class: associatedPluginByType!.class,
                     raw: value,
                     type: 'color',
                 }
@@ -87,6 +117,7 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
         } else  {
             valueDeclaration = {
                 value: scale[value],
+                class: associatedPluginByType!.class,
                 raw: value,
                 type: unitType
             }
@@ -103,4 +134,4 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
     }
 }
 
-console.log(parse("bg-opacity-50"))
+console.log(parse("w-1/2"))

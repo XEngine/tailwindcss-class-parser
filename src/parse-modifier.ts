@@ -1,5 +1,5 @@
-import {decodeArbitraryValue} from "./utils/decodeArbitraryValue.ts";
-import type {CandidateModifier} from "./utils/types.ts";
+import {decodeArbitraryValue} from "./utils/decodeArbitraryValue";
+import type {CandidateModifier} from "./utils/types";
 
 export function parseModifier(modifier: string): CandidateModifier  {
     if (modifier[0] === '[' && modifier[modifier.length - 1] === ']') {

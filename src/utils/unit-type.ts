@@ -1,9 +1,9 @@
-import {segment} from "./segment.ts";
+import {segment} from "./segment";
 import type {CustomThemeConfig} from "tailwindcss/types/config";
+import type {DataType} from "./infer-data-type.ts";
 
-export type UnitType = 'text' | 'image' | 'color' | 'coordinate' | 'unit' | 'raw' | 'length' | 'number'
 
-export const determineUnitType = (theme: CustomThemeConfig, input: string): UnitType => {
+export const determineUnitType = (theme: CustomThemeConfig, input: string): DataType | null => {
     const [value,] = segment(input, '-')
 
     if (value in theme.colors ||
@@ -15,12 +15,12 @@ export const determineUnitType = (theme: CustomThemeConfig, input: string): Unit
     ) {
         return 'color'
     }
-    if (value in theme.spacing) {
+    if (value in theme.spacing || value in theme.width) {
         return 'length'
     }
     if(value in theme.opacity){
         return 'number'
     }
 
-    return "raw"
+    return null
 }
