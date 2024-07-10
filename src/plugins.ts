@@ -2,7 +2,12 @@ import type {DataType} from "./utils/infer-data-type";
 
 export type Variant = {
     kind: 'arbitrary' | 'named',
-    type: 'opacity' | 'media' | 'pseudo' | 'content' | 'form' | 'state' | 'interaction' | 'misc'
+    type: 'opacity' | 'media' | 'pseudo' | 'content' | 'form' | 'state' | 'interaction' | 'misc' | 'system'
+    value: string
+}
+
+export type Modifier = {
+    kind: 'arbitrary' | 'named',
     value: string
 }
 
@@ -14,7 +19,7 @@ export type FunctionalPlugin = {
     supportNegative?: boolean
 }
 
-export type NamedPlugin ={
+export type NamedPlugin = {
     value: string
     class: string[],
     ns: string,
@@ -366,4 +371,25 @@ export const variants = new Map<string, Variant["type"]>([
     ['active', 'interaction'],
     ['enabled', 'interaction'],
     ['disabled', 'interaction'],
+
+    ['dark', 'system']
 ])
+
+export const getPluginsByNs = (ns: string, pluginMap: Map<string, NamedPlugin | FunctionalPlugin>) => {
+    const filteredMap = new Map()
+    for(const [key, value] of Object.entries(pluginMap)) {
+        console.log(value)
+
+        if(Array.isArray(value)){
+            for(const plugin of value){
+                if(plugin.ns === ns) {
+                    filteredMap.set(key, plugin)
+                }
+            }
+        }else if(value.ns === ns) {
+            filteredMap.set(key, value)
+        }
+    }
+
+    return filteredMap
+}

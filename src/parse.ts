@@ -1,9 +1,9 @@
 import {segment} from "./utils/segment";
 import {findRoot} from "./find-root";
-import {functionalPlugins, namedPlugins, type Variant} from "./plugins";
+import {functionalPlugins, type Modifier, namedPlugins, type Variant} from "./plugins";
 import {parseVariant} from "./parse-variant";
 import {inferDataType} from "./utils/infer-data-type.ts";
-import {getValue} from "./utils/value.ts";
+import {getValue, type Value} from "./utils/value.ts";
 import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception.ts";
 import {decodeArbitraryValue} from "./utils/decodeArbitraryValue.ts";
 import type {CustomThemeConfig, ScreensConfig} from "tailwindcss/types/config";
@@ -15,7 +15,19 @@ export type State = {
     negative: boolean
 }
 
-export const parse = (input: string, config?: CustomThemeConfig) => {
+export type AST = {
+    root: string
+    kind: "named" | "functional"
+    property: string
+    value: Value
+    variants: Variant[]
+    modifiers: Modifier[],
+    important: boolean
+    negative: boolean,
+    arbitrary: boolean
+}
+
+export const parse = (input: string, config?: CustomThemeConfig): AST => {
     const theme = getTailwindTheme(config)
     let state: State = {
         important: false,
@@ -28,8 +40,8 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
 
     for (let i = variants.length - 1; i >= 0; --i) {
         let parsedVariant = parseVariant(variants[i], theme.screens as ScreensConfig)
-        if (parsedVariant === null) return null
-        parsedCandidateVariants.push(parsedVariant)
+        if (parsedVariant !== null)
+            parsedCandidateVariants.push(parsedVariant)
     }
 
     if (base[0] === '!') {
@@ -46,16 +58,19 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
     if (namedPlugin) {
         return {
             root: base,
-            kind: "static",
+            kind: "named",
             property: namedPlugin!.ns,
             value: {
                 class: namedPlugin.class,
                 raw: base,
+                kind: "named",
                 value: namedPlugin.value,
             },
-            modifier: parsedCandidateVariants,
+            variants: parsedCandidateVariants,
+            modifiers: [],
             important: state.important,
-            negative: state.negative
+            negative: state.negative,
+            arbitrary: false
         }
     }
 
@@ -77,14 +92,16 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
 
         return {
             root: root,
+            kind: "functional",
             property: associatedPluginByType!.ns,
             value: {
                 value: arbitraryValue,
                 class: associatedPluginByType!.class,
                 raw: value,
-                type: unitType
+                kind: unitType || "named"
             },
-            modifier: parsedCandidateVariants,
+            variants: parsedCandidateVariants,
+            modifiers: [],
             arbitrary: true,
             important: state.important,
             negative: state.negative
@@ -95,27 +112,26 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
     let isValueColor = isColor(value, theme)
 
     //we need to remove modifier from value
+    const modifiers: Modifier[] = []
     if (value && isValueColor) {
         let [valueWithoutModifier, modifierSegment = null] = segment(value, '/')
         value = valueWithoutModifier
         if (modifierSegment) {
             if (modifierSegment[0] === '[' && modifierSegment[modifierSegment.length - 1] === ']') {
-                parsedCandidateVariants.push({
+                modifiers.push({
                     kind: 'arbitrary',
-                    type: "opacity",
                     value: decodeArbitraryValue(modifierSegment.slice(1, -1)),
                 })
             } else {
-                parsedCandidateVariants.push({
+                modifiers.push({
                     kind: 'named',
-                    type: "opacity",
                     value: modifierSegment,
                 })
             }
         }
     }
 
-    if(!value){
+    if (!value) {
         value = 'DEFAULT'
     }
     //check value against each scale of available plugins
@@ -126,10 +142,13 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
 
     return {
         root: root,
+        kind: "functional",
         property: matchedPlugin.ns,
         value: getValue(value, matchedPlugin, theme[matchedPlugin.scaleKey]),
-        modifier: parsedCandidateVariants,
+        variants: parsedCandidateVariants,
+        modifiers: modifiers,
         important: state.important,
-        negative: state.negative
+        negative: state.negative,
+        arbitrary: false,
     }
 }

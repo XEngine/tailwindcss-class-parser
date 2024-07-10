@@ -18,6 +18,7 @@ export type DataType =
     | 'relative-size'
     | 'angle'
     | 'vector'
+    | 'named'
 
 const checks: Record<DataType, (value: string) => boolean> = {
     color: isColor,
@@ -35,6 +36,7 @@ const checks: Record<DataType, (value: string) => boolean> = {
     'relative-size': isRelativeSize,
     angle: isAngle,
     vector: isVector,
+    named: () => true
 }
 
 /**
