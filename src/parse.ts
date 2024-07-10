@@ -1,12 +1,10 @@
 import {segment} from "./utils/segment";
 import {findRoot} from "./find-root";
-import {type FunctionalPlugin, functionalPlugins, namedPlugins, type Variant} from "./plugins";
-import {determineUnitType} from "./utils/unit-type";
+import {functionalPlugins, namedPlugins, type Variant} from "./plugins";
 import {parseVariant} from "./parse-variant";
-import {type DataType, inferDataType} from "./utils/infer-data-type.ts";
+import {inferDataType} from "./utils/infer-data-type.ts";
 import {getValue} from "./utils/value.ts";
 import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception.ts";
-import {IncorrectValueTypeException} from "./exceptions/incorrect-value-type-exception.ts";
 import {decodeArbitraryValue} from "./utils/decodeArbitraryValue.ts";
 import type {CustomThemeConfig, ScreensConfig} from "tailwindcss/types/config";
 import {getTailwindTheme} from "./theme.ts";
@@ -135,8 +133,3 @@ export const parse = (input: string, config?: CustomThemeConfig) => {
         negative: state.negative
     }
 }
-
-console.log(parse("lg:hover:text-red-500"))
-console.log(parse("bg-gray-50/20"))
-console.log(parse("group-hover:h-6"))
-console.log(parse("hover:w-6"))

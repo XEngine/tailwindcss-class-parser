@@ -2,13 +2,28 @@
   "name": "vite-project",
   "version": "1.0.0",
   "type": "module",
+  "author": "T. Cem Yılmaz <posta@cemyilmaz.me>",
+  "license": "MIT",
+  "keywords": [
+    "tailwindcss",
+    "parser",
+    "utils"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
+  "main": "./dist/tailwind-parser.cjs",
   "exports": {
-    ".": "./dist/tailwind-parser.js"
+    ".": {
+      "require": {
+        "default": "./dist/tailwind-parser.cjs"
+      },
+      "import": {
+        "default": "./dist/tailwind-parser.mjs"
+      }
+    }
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.4"
