@@ -9,10 +9,10 @@ export default defineConfig({
         lib: {
             // Could also be a dictionary or array of multiple entry points
             entry: resolve(__dirname, 'src/parse.ts'),
-            name: 'TailwindParser',
+            name: 'TailwindcssClassParser',
             formats: ["es","cjs"],
             // the proper extensions will be added
-            fileName: 'tailwind-parser',
+            fileName: 'tailwindcss-class-parser',
         },
         rollupOptions: {
             // make sure to externalize deps that shouldn't be bundled
