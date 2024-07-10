@@ -1,6 +1,6 @@
 // vite.config.js
-import { resolve } from 'path'
-import { defineConfig } from 'vite'
+import {resolve} from 'path'
+import {defineConfig} from 'vite'
 import dts from 'vite-plugin-dts'
 
 export default defineConfig({
@@ -8,11 +8,11 @@ export default defineConfig({
     build: {
         lib: {
             // Could also be a dictionary or array of multiple entry points
-            entry: resolve(__dirname, 'src/parse.ts'),
+            entry: resolve(__dirname, 'src/index.ts'),
             name: 'TailwindcssClassParser',
-            formats: ["es","cjs"],
+            formats: ["es", "umd"],
             // the proper extensions will be added
-            fileName: 'tailwindcss-class-parser',
+            fileName: format => `tailwindcss-class-parser.${format}.js`,
         },
         rollupOptions: {
             // make sure to externalize deps that shouldn't be bundled
