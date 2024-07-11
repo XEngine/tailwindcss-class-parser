@@ -113,7 +113,6 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ["border", [
         {scaleKey: "borderWidth", ns: 'borderWidth', class: ['border-width'], type: 'line-width'},
         {scaleKey: "borderColor", ns: 'borderColor', class: ['border-color'], type: 'color'},
-        {scaleKey: "borderStyle", ns: 'borderStyle', class: ['border-style'], type: 'line-width'},
     ]],
     ["ring", [
         {scaleKey: "ringWidth", ns: 'ringWidth', class: ['box-shadow'], type: 'line-width'},
@@ -137,6 +136,12 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ]],
     ["gap", [
         {scaleKey: "gap", ns: 'gap', class: ['gap'], type: 'length'},
+    ]],
+    ["gap-x", [
+        {scaleKey: "gap", ns: 'gapX', class: ['gap'], type: 'length'},
+    ]],
+    ["gap-y", [
+        {scaleKey: "gap", ns: 'gapY', class: ['gap'], type: 'length'},
     ]],
     ["col", [
         {scaleKey: "gridColumn", ns: 'gridColumn', class: ['grid-column'], type: 'number'},
@@ -213,6 +218,9 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ]],
     ["end", [
         {scaleKey: "inset", ns: 'insetInlineEnd', class: ['inset-inline-end'], type: 'length', supportNegative: true},
+    ]],
+    ["order", [
+        {scaleKey: "order", ns: 'order', class: ['order'], type: 'length', supportNegative: true},
     ]],
 ]);
 
@@ -319,14 +327,14 @@ export const namedPlugins = new Map<string, NamedPlugin>([
     ["justify-evenly", {class: ['justify-content'], value: 'space-evenly', ns: 'justifyContent'}],
 
     // Flex Grow & Shrink
-    ["flex-grow", {class: ['flex-grow'], value: '1', ns: 'flexGrow'}],
-    ["flex-grow-0", {class: ['flex-grow'], value: '0', ns: 'flexGrow'}],
     ["grow", {class: ['flex-grow'], value: '1', ns: 'flexGrow'}],
     ["grow-0", {class: ['flex-grow'], value: '0', ns: 'flexGrow'}],
-    ["flex-shrink", {class: ['flex-shrink'], value: '1', ns: 'flexShrink'}],
-    ["flex-shrink-0", {class: ['flex-shrink'], value: '0', ns: 'flexShrink'}],
+    ["flex-grow", {class: ['flex-grow'], value: '1', ns: 'flexGrow'}],
+    ["flex-grow-0", {class: ['flex-grow'], value: '0', ns: 'flexGrow'}],
     ["shrink", {class: ['flex-shrink'], value: '1', ns: 'flexShrink'}],
     ["shrink-0", {class: ['flex-shrink'], value: '0', ns: 'flexShrink'}],
+    ["flex-shrink", {class: ['flex-shrink'], value: '1', ns: 'flexShrink'}],
+    ["flex-shrink-0", {class: ['flex-shrink'], value: '0', ns: 'flexShrink'}],
 
 ])
 
