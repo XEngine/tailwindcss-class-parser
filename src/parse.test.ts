@@ -7,7 +7,8 @@ it('should parse a functional class', () => {
             "root": "bg",
             "kind": "functional",
             "property": "backgroundColor",
-            "value": {
+            "value": "#ef4444",
+            "valueDef": {
                 "value": "#ef4444",
                 "kind": "color",
                 "class": [
@@ -30,7 +31,8 @@ it("should parse a named/static class", () => {
             "root": "flex",
             "kind": "named",
             "property": "display",
-            "value": {
+            "value": "flex",
+            "valueDef": {
                 "class": [
                     "display"
                 ],
@@ -52,7 +54,8 @@ it("should parse a functional class with arbitrary modifier", () => {
             "root": "bg",
             "kind": "functional",
             "property": "backgroundColor",
-            "value": {
+            "value": "#f9fafb",
+            "valueDef": {
                 "value": "#f9fafb",
                 "kind": "color",
                 "class": [
@@ -77,7 +80,8 @@ it("should parse a functional class with modifier", () => {
             "root": "bg",
             "kind": "functional",
             "property": "backgroundColor",
-            "value": {
+            "value": "#f9fafb",
+            "valueDef": {
                 "value": "#f9fafb",
                 "kind": "color",
                 "class": [
@@ -102,7 +106,8 @@ it("should parse a functional class with variants", () => {
             "root": "text",
             "kind": "functional",
             "property": "textColor",
-            "value": {
+            "value": "#ef4444",
+            "valueDef": {
                 "value": "#ef4444",
                 "kind": "color",
                 "class": [

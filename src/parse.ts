@@ -19,7 +19,8 @@ export type AST = {
     root: string
     kind: "named" | "functional"
     property: string
-    value: Value
+    value: string
+    valueDef: Value
     variants: Variant[]
     modifier: Modifier | null,
     important: boolean
@@ -60,7 +61,8 @@ export const parse = (input: string, config?: CustomThemeConfig): AST => {
             root: base,
             kind: "named",
             property: namedPlugin!.ns,
-            value: {
+            value: namedPlugin.value,
+            valueDef: {
                 class: namedPlugin.class,
                 raw: base,
                 kind: "named",
@@ -94,7 +96,8 @@ export const parse = (input: string, config?: CustomThemeConfig): AST => {
             root: root,
             kind: "functional",
             property: associatedPluginByType!.ns,
-            value: {
+            value: arbitraryValue,
+            valueDef:{
                 value: arbitraryValue,
                 class: associatedPluginByType!.class,
                 raw: value,
@@ -140,11 +143,14 @@ export const parse = (input: string, config?: CustomThemeConfig): AST => {
         throw new PluginNotFoundException(base)
     }
 
+    const val = getValue(value, matchedPlugin, theme[matchedPlugin.scaleKey])
+
     return {
         root: root,
         kind: "functional",
         property: matchedPlugin.ns,
-        value: getValue(value, matchedPlugin, theme[matchedPlugin.scaleKey]),
+        value: val.value,
+        valueDef: val,
         variants: parsedCandidateVariants,
         modifier: modifier,
         important: state.important,
