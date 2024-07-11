@@ -21,7 +21,7 @@ export type AST = {
     property: string
     value: Value
     variants: Variant[]
-    modifiers: Modifier[],
+    modifier: Modifier | null,
     important: boolean
     negative: boolean,
     arbitrary: boolean
@@ -67,7 +67,7 @@ export const parse = (input: string, config?: CustomThemeConfig): AST => {
                 value: namedPlugin.value,
             },
             variants: parsedCandidateVariants,
-            modifiers: [],
+            modifier: null,
             important: state.important,
             negative: state.negative,
             arbitrary: false
@@ -101,7 +101,7 @@ export const parse = (input: string, config?: CustomThemeConfig): AST => {
                 kind: unitType || "named"
             },
             variants: parsedCandidateVariants,
-            modifiers: [],
+            modifier: null,
             arbitrary: true,
             important: state.important,
             negative: state.negative
@@ -112,21 +112,21 @@ export const parse = (input: string, config?: CustomThemeConfig): AST => {
     let isValueColor = isColor(value, theme)
 
     //we need to remove modifier from value
-    const modifiers: Modifier[] = []
+    let modifier: Modifier | null = null
     if (value && isValueColor) {
         let [valueWithoutModifier, modifierSegment = null] = segment(value, '/')
         value = valueWithoutModifier
         if (modifierSegment) {
             if (modifierSegment[0] === '[' && modifierSegment[modifierSegment.length - 1] === ']') {
-                modifiers.push({
+                modifier = {
                     kind: 'arbitrary',
                     value: decodeArbitraryValue(modifierSegment.slice(1, -1)),
-                })
+                }
             } else {
-                modifiers.push({
+                modifier = {
                     kind: 'named',
                     value: modifierSegment,
-                })
+                }
             }
         }
     }
@@ -146,7 +146,7 @@ export const parse = (input: string, config?: CustomThemeConfig): AST => {
         property: matchedPlugin.ns,
         value: getValue(value, matchedPlugin, theme[matchedPlugin.scaleKey]),
         variants: parsedCandidateVariants,
-        modifiers: modifiers,
+        modifier: modifier,
         important: state.important,
         negative: state.negative,
         arbitrary: false,

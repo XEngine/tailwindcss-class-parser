@@ -42,25 +42,25 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
         {scaleKey: "minHeight", ns: 'minHeight', class: ['min-height'], type: 'length'},
     ]],
     ["m", [
-        {scaleKey: "margin", ns: 'margin', class: ['margin'], type: 'length'},
+        {scaleKey: "margin", ns: 'margin', class: ['margin'], type: 'length', supportNegative: true},
     ]],
     ["mx", [
-        {scaleKey: "margin", ns: 'marginX', class: ['margin-left', 'margin-right'], type: 'length'},
+        {scaleKey: "margin", ns: 'marginX', class: ['margin-left', 'margin-right'], type: 'length', supportNegative: true},
     ]],
     ["my", [
-        {scaleKey: "margin", ns: 'marginY', class: ['margin-top', 'margin-bottom'], type: 'length'},
+        {scaleKey: "margin", ns: 'marginY', class: ['margin-top', 'margin-bottom'], type: 'length', supportNegative: true},
     ]],
     ["mt", [
-        {scaleKey: "margin", ns: 'marginTop', class: ['margin-top'], type: 'length'},
+        {scaleKey: "margin", ns: 'marginTop', class: ['margin-top'], type: 'length', supportNegative: true},
     ]],
     ["mr", [
-        {scaleKey: "margin", ns: 'marginRight', class: ['margin-right'], type: 'length'},
+        {scaleKey: "margin", ns: 'marginRight', class: ['margin-right'], type: 'length', supportNegative: true},
     ]],
     ["mb", [
-        {scaleKey: "margin", ns: 'marginBottom', class: ['margin-bottom'], type: 'length'},
+        {scaleKey: "margin", ns: 'marginBottom', class: ['margin-bottom'], type: 'length', supportNegative: true},
     ]],
     ["ml", [
-        {scaleKey: "margin", ns: 'marginLeft', class: ['margin-left'], type: 'length'},
+        {scaleKey: "margin", ns: 'marginLeft', class: ['margin-left'], type: 'length', supportNegative: true},
     ]],
     ["p", [
         {scaleKey: "padding", ns: 'padding', class: ['padding'], type: 'length'},
@@ -95,7 +95,7 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
         {scaleKey: "lineHeight", ns: 'lineHeight', class: ['line-height'], type: 'number'},
     ]],
     ["tracking", [
-        {scaleKey: "letterSpacing", ns: 'letterSpacing', class: ['letter-spacing'], type: 'length'},
+        {scaleKey: "letterSpacing", ns: 'letterSpacing', class: ['letter-spacing'], type: 'length', supportNegative: true},
     ]],
     ["bg", [
         {scaleKey: "backgroundImage", ns: 'backgroundImage', class: ['background-image'], type: 'image'},
@@ -145,10 +145,10 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
         {scaleKey: "gridRow", ns: 'gridRow', class: ['grid-row'], type: 'number'},
     ]],
     ["space-x", [
-        {scaleKey: "spacing", ns: 'spaceX', class: ['margin-left'], type: 'number'},
+        {scaleKey: "spacing", ns: 'spaceX', class: ['margin-left'], type: 'number', supportNegative: true},
     ]],
     ["space-y", [
-        {scaleKey: "spacing", ns: 'spaceY', class: ['margin-top'], type: 'number'},
+        {scaleKey: "spacing", ns: 'spaceY', class: ['margin-top'], type: 'number', supportNegative: true},
     ]],
     ["opacity", [
         {scaleKey: "opacity", ns: 'opacity', class: ['opacity'], type: 'number'},
@@ -161,58 +161,58 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
         {scaleKey: "transitionDuration", ns: 'transitionDuration', class: ['transition-duration'], type: 'number'},
     ]],
     ["scale", [
-        {scaleKey: "scale", ns: 'scale', class: ['scale'], type: 'number'},
+        {scaleKey: "scale", ns: 'scale', class: ['scale'], type: 'number', supportNegative: true},
     ]],
     ["rotate", [
-        {scaleKey: "rotate", ns: 'rotate', class: ['rotate'], type: 'angle'},
+        {scaleKey: "rotate", ns: 'rotate', class: ['rotate'], type: 'angle', supportNegative: true},
     ]],
     ["translate", [
-        {scaleKey: "translate", ns: 'translate', class: ['transform'], type: 'length'},
+        {scaleKey: "translate", ns: 'translate', class: ['transform'], type: 'length', supportNegative: true},
     ]],
     ["translate-y", [
-        {scaleKey: "translate", ns: 'translateY', class: ['transform'], type: 'length'},
+        {scaleKey: "translate", ns: 'translateY', class: ['transform'], type: 'length', supportNegative: true},
     ]],
     ["translate-x", [
-        {scaleKey: "translate", ns: 'translateX', class: ['transform'], type: 'length'},
+        {scaleKey: "translate", ns: 'translateX', class: ['transform'], type: 'length', supportNegative: true},
     ]],
     ["skew", [
-        {scaleKey: "skew", ns: 'skew', class: ['skew'], type: 'angle'},
+        {scaleKey: "skew", ns: 'skew', class: ['skew'], type: 'angle', supportNegative: true},
     ]],
     ["z", [
-        {scaleKey: "zIndex", ns: 'zIndex', class: ['z-index'], type: 'number'},
+        {scaleKey: "zIndex", ns: 'zIndex', class: ['z-index'], type: 'number', supportNegative: true},
     ]],
     ["inset", [
-        {scaleKey: "inset", ns: 'inset', class: ['inset'], type: 'length'},
+        {scaleKey: "inset", ns: 'inset', class: ['inset'], type: 'length', supportNegative: true},
     ]],
     ["inset-x", [
-        {scaleKey: "inset", ns: 'insetX', class: ['inset-x'], type: 'length'},
+        {scaleKey: "inset", ns: 'insetX', class: ['inset-x'], type: 'length', supportNegative: true},
     ]],
     ["inset-x", [
-        {scaleKey: "inset", ns: 'insetY', class: ['inset'], type: 'length'},
+        {scaleKey: "inset", ns: 'insetY', class: ['inset'], type: 'length', supportNegative: true},
     ]],
     ["inset-x", [
-        {scaleKey: "inset", ns: 'insetX', class: ['left', 'right'], type: 'length'},
+        {scaleKey: "inset", ns: 'insetX', class: ['left', 'right'], type: 'length', supportNegative: true},
     ]],
     ["inset-x", [
-        {scaleKey: "inset", ns: 'insetY', class: ['top', 'bottom'], type: 'length'},
+        {scaleKey: "inset", ns: 'insetY', class: ['top', 'bottom'], type: 'length', supportNegative: true},
     ]],
     ["top", [
-        {scaleKey: "inset", ns: 'positionTop', class: ['top'], type: 'length'},
+        {scaleKey: "inset", ns: 'positionTop', class: ['top'], type: 'length', supportNegative: true},
     ]],
     ["right", [
-        {scaleKey: "inset", ns: 'positionRight', class: ['right'], type: 'length'},
+        {scaleKey: "inset", ns: 'positionRight', class: ['right'], type: 'length', supportNegative: true},
     ]],
     ["bottom", [
-        {scaleKey: "inset", ns: 'positionBottom', class: ['bottom'], type: 'length'},
+        {scaleKey: "inset", ns: 'positionBottom', class: ['bottom'], type: 'length', supportNegative: true},
     ]],
     ["left", [
-        {scaleKey: "inset", ns: 'positionLeft', class: ['left'], type: 'length'},
+        {scaleKey: "inset", ns: 'positionLeft', class: ['left'], type: 'length', supportNegative: true},
     ]],
     ["start", [
-        {scaleKey: "inset", ns: 'insetInlineStart', class: ['inset-inline-start'], type: 'length'},
+        {scaleKey: "inset", ns: 'insetInlineStart', class: ['inset-inline-start'], type: 'length', supportNegative: true},
     ]],
     ["end", [
-        {scaleKey: "inset", ns: 'insetInlineEnd', class: ['inset-inline-end'], type: 'length'},
+        {scaleKey: "inset", ns: 'insetInlineEnd', class: ['inset-inline-end'], type: 'length', supportNegative: true},
     ]],
 ]);
 

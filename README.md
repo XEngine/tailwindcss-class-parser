@@ -13,7 +13,7 @@ It is probably missing many Tailwind classes and might throw some exceptions. Yo
 You can install the Tailwindcss Parser via npm:
 
 ```bash
-npm install tailwindcss-class-parser
+npm install @xengine/tailwindcss-class-parser
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ To use the Tailwindcss Parser, you need to import the `parse` function from the 
 ### Example
 
 ```javascript
-import { parse } from 'tailwindcss-class-parser';
+import { parse } from '@xengine/tailwindcss-class-parser';
 
 const ast = parse('lg:hover:text-red-500');
 
@@ -74,7 +74,22 @@ Parses a given Tailwind CSS class and returns an AST object.
 ### `className(ast: object): string`
 
 Converts a given Tailwind CSS AST to the original class string.
-- TODO
+#### Parameters
+
+- `ast` (object): small Tailwind CSS declaration
+```
+  AstDeclaration = {
+    property: string
+    value: string
+    variants?: Variant[]
+    modifier?: string,
+    important?: boolean
+    negative?: boolean,
+}
+  ```
+#### Returns
+
+- `className` (string): The Tailwind CSS class.
 
 ## Contributing
 
