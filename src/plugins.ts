@@ -6,11 +6,6 @@ export type Variant = {
     value: string
 }
 
-export type Modifier = {
-    kind: 'arbitrary' | 'named',
-    value: string
-}
-
 export type FunctionalPlugin = {
     scaleKey: string,
     class: string[],

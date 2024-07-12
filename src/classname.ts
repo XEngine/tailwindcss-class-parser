@@ -1,14 +1,19 @@
-import type {AST} from "./parse.ts";
-import {functionalPlugins, getPluginsByNs, type Modifier, namedPlugins, type Variant} from "./plugins.ts";
-import {inferDataType} from "./utils/infer-data-type.ts";
+import {functionalPlugins, namedPlugins, type Variant} from "./plugins.ts";
 import {getTailwindTheme} from "./theme.ts";
 import {isColor} from "./utils/is-color.ts";
-import {decodeArbitraryValue} from "./utils/decodeArbitraryValue.ts";
-import {segment} from "./utils/segment.ts";
 import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception.ts";
-import {colord} from "colord";
 import type {CustomThemeConfig} from "tailwindcss/types/config";
 import {StringBuilder} from "./utils/string-builder.ts";
+import {CalculateHexFromString} from "./utils/calculate-hex-from-string.ts";
+import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex.ts";
+import {buildModifier} from "./utils/build-modifier.ts";
+
+
+type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
+    ? Acc[number]
+    : Enumerate<N, [...Acc, Acc['length']]>
+
+type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
 
 export type AstDeclaration = {
     property: string
@@ -63,10 +68,10 @@ export const classname = (ast: AstDeclaration, config?: CustomThemeConfig): stri
         }
         //at this point we know user entered a value like "#ff0000", or just "red" maybe rgba, hsla, etc.
         //try to get hex color and check if tailwind has it.
-        const color = calculateHex(ast.value)
+        const color = CalculateHexFromString(ast.value)
         return stringBuilder
             .appendModifier(buildModifier(color.alpha || ast.modifier, theme.opacity))
-            .addValue(findTailwindColorByHex(color.hex, theme[matchedPlugin.scaleKey || "colors"]) || StringBuilder.makeArbitrary(color.hex))
+            .addValue(findTailwindColorFromHex(color.hex, theme[matchedPlugin.scaleKey || "colors"]) || StringBuilder.makeArbitrary(color.hex))
             .toString()
     }
 
@@ -86,42 +91,6 @@ export const classname = (ast: AstDeclaration, config?: CustomThemeConfig): stri
     }
 
     return stringBuilder.toString()
-}
-
-const calculateHex = (input: string): { hex: string, alpha: string | undefined } => {
-    const color = colord(input)
-    const alpha = color.alpha()
-
-    return {
-        hex: color.alpha(1).toHex(),
-        alpha: alpha !== 1 ? alpha.toString() : undefined
-    }
-}
-
-const buildModifier = (modifier: string | undefined, opacityScale: any): string => {
-    if (!modifier) return ""
-
-    for (let [key, value] of Object.entries(opacityScale)) {
-        if (key === modifier || value === modifier) {
-            return key
-        }
-    }
-
-    return StringBuilder.makeArbitrary(modifier)
-}
-
-const findTailwindColorByHex = (colorInput: string | undefined, colors: any) => {
-    if (!colorInput) return false
-
-    for (let [key, twColors] of Object.entries(colors)) {
-        for (let [shade, hex] of Object.entries(twColors as [string, string])) {
-            if (hex === colorInput) {
-                return `${key}-${shade}`
-            }
-        }
-    }
-
-    return false
 }
 
 const findTailwindValueByUnit = (unit: string | undefined, scale: any) => {

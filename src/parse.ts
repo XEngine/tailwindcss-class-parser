@@ -1,14 +1,16 @@
 import {segment} from "./utils/segment";
 import {findRoot} from "./find-root";
-import {functionalPlugins, type Modifier, namedPlugins, type Variant} from "./plugins";
+import {type FunctionalPlugin, functionalPlugins, namedPlugins, type Variant} from "./plugins";
 import {parseVariant} from "./parse-variant";
 import {inferDataType} from "./utils/infer-data-type.ts";
 import {getValue, type Value} from "./utils/value.ts";
 import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception.ts";
-import {decodeArbitraryValue} from "./utils/decodeArbitraryValue.ts";
 import type {CustomThemeConfig, ScreensConfig} from "tailwindcss/types/config";
 import {getTailwindTheme} from "./theme.ts";
 import {isColor} from "./utils/is-color.ts";
+import {CalculateHexFromString} from "./utils/calculate-hex-from-string.ts";
+import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex.ts";
+import {buildModifier} from "./utils/build-modifier.ts";
 
 export type State = {
     important: boolean
@@ -22,13 +24,19 @@ export type AST = {
     value: string
     valueDef: Value
     variants: Variant[]
-    modifier: Modifier | null,
+    modifier: string | null,
     important: boolean
     negative: boolean,
     arbitrary: boolean
 }
 
-export const parse = (input: string, config?: CustomThemeConfig): AST => {
+export type Error = {
+    root: string
+    kind: "error"
+    message: string
+}
+
+export const parse = (input: string, config?: CustomThemeConfig): AST | Error => {
     const theme = getTailwindTheme(config)
     let state: State = {
         important: false,
@@ -79,32 +87,45 @@ export const parse = (input: string, config?: CustomThemeConfig): AST => {
     let [root, value] = findRoot(base, functionalPlugins)
 
     if (!root) {
-        throw new PluginNotFoundException(base)
+        //throw new PluginNotFoundException(base)
+        return {
+            root: base,
+            kind: "error",
+            message: "Tailwindcss core plugin not found",
+        }
     }
 
-    const availablePlugins = functionalPlugins.get(root)
-    if (!availablePlugins) {
-        throw new PluginNotFoundException(base)
+    const availablePlugins = functionalPlugins.get(root) as FunctionalPlugin[]
+    let modifier: string | null = null
+    let [valueWithoutModifier, modifierSegment = null] = segment(value || "", '/')
+
+    if (modifierSegment) {
+        modifier = buildModifier(modifierSegment, theme.opacity)
     }
 
-    if (value && value[0] === '[' && value[value.length - 1] === ']') {
-        let arbitraryValue = value.slice(1, -1)
+    if (valueWithoutModifier && valueWithoutModifier[0] === '[' && valueWithoutModifier[valueWithoutModifier.length - 1] === ']') {
+        let arbitraryValue = valueWithoutModifier.slice(1, -1)
         const unitType = inferDataType(arbitraryValue, [...availablePlugins.values()].map(({type}) => type))
         const associatedPluginByType = availablePlugins!.find(plugin => plugin.type === unitType)
+
+        if (unitType === "color") {
+            const color = CalculateHexFromString(arbitraryValue)
+            valueWithoutModifier = findTailwindColorFromHex(color.hex, theme[associatedPluginByType?.scaleKey || "colors"]) || color.hex
+        }
 
         return {
             root: root,
             kind: "functional",
             property: associatedPluginByType!.ns,
             value: arbitraryValue,
-            valueDef:{
+            valueDef: {
                 value: arbitraryValue,
                 class: associatedPluginByType!.class,
-                raw: value,
+                raw: valueWithoutModifier,
                 kind: unitType || "named"
             },
             variants: parsedCandidateVariants,
-            modifier: null,
+            modifier: modifier,
             arbitrary: true,
             important: state.important,
             negative: state.negative
@@ -112,38 +133,19 @@ export const parse = (input: string, config?: CustomThemeConfig): AST => {
     }
 
     //@ts-ignore
-    let isValueColor = isColor(value, theme)
+    let isValueColor = isColor(valueWithoutModifier, theme)
 
-    //we need to remove modifier from value
-    let modifier: Modifier | null = null
-    if (value && isValueColor) {
-        let [valueWithoutModifier, modifierSegment = null] = segment(value, '/')
-        value = valueWithoutModifier
-        if (modifierSegment) {
-            if (modifierSegment[0] === '[' && modifierSegment[modifierSegment.length - 1] === ']') {
-                modifier = {
-                    kind: 'arbitrary',
-                    value: decodeArbitraryValue(modifierSegment.slice(1, -1)),
-                }
-            } else {
-                modifier = {
-                    kind: 'named',
-                    value: modifierSegment,
-                }
-            }
-        }
-    }
 
-    if (!value) {
-        value = 'DEFAULT'
+    if (!valueWithoutModifier) {
+        valueWithoutModifier = 'DEFAULT'
     }
     //check value against each scale of available plugins
-    let matchedPlugin = availablePlugins.find(({scaleKey}) => value.split('-')[0] in theme[scaleKey])
+    let matchedPlugin = availablePlugins.find(({scaleKey}) => valueWithoutModifier.split('-')[0] in theme[scaleKey])
     if (!matchedPlugin) {
         throw new PluginNotFoundException(base)
     }
 
-    const val = getValue(value, matchedPlugin, theme[matchedPlugin.scaleKey])
+    const val = getValue(valueWithoutModifier, matchedPlugin, theme[matchedPlugin.scaleKey])
 
     return {
         root: root,

@@ -8,7 +8,9 @@
   "keywords": [
     "tailwindcss",
     "parser",
-    "utils"
+    "utils",
+    "ast",
+    "tailwind js object"
   ],
   "homepage": "https://github.com/XEngine/tailwindcss-class-parser",
   "scripts": {
