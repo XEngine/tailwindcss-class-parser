@@ -64,10 +64,7 @@ it("should parse a functional class with arbitrary modifier", () => {
                 "raw": "gray-50"
             },
             "variants": [],
-            "modifier": {
-                "kind": "arbitrary",
-                "value": "50%"
-            },
+            "modifier": "[50%]",
             "important": false,
             "negative": false,
             "arbitrary": false
@@ -90,10 +87,7 @@ it("should parse a functional class with modifier", () => {
                 "raw": "gray-50"
             },
             "variants": [],
-            "modifier": {
-                "kind": "named",
-                "value": "20"
-            },
+            "modifier": "20",
             "important": false,
             "negative": false,
             "arbitrary": false

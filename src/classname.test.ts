@@ -9,7 +9,7 @@ const table = [
     [{property: "backgroundColor", value: "#ef4444"}, "bg-red-500"],
     [{property: "backgroundColor", value: "#ef4444", modifier: 30}, "bg-red-500/30"],
     [{property: "backgroundColor", value: "#ef4444", modifier: 32}, "bg-red-500/[32%]"],
-    [{property: "backgroundColor", value: "#ef44444f"}, "bg-red-500/[31%]"],
+    [{property: "backgroundColor", value: "#ef44444f"}, "bg-red-500/[0.31]"],
     [{property: "backgroundColor", value: "rgba(239, 68, 68, 0.3)"}, "bg-red-500/30"],
     [{property: "backgroundColor", value: "hsla(0, 84%, 60.1%, 0.3)"}, "bg-red-500/30"],
     [{property: "fontSize", value: "1rem"}, "text-base"],
