@@ -32,7 +32,11 @@ export const classname = (ast: AstDeclaration, config?: Config): string => {
         negative = true
     }
 
-    const [namedPluginClassName,] = [...namedPlugins.entries()].find(([, plugin]) => plugin.value === ast.value) || []
+    const [namedPluginClassName] = [...namedPlugins.entries()]
+        .filter(([, plugin]) => plugin.ns === ast.property)
+        .find(([, plugin]) => plugin.value === ast.value)
+    || []
+
     if (namedPluginClassName) {
         return stringBuilder.addRoot(namedPluginClassName).toString()
     }
