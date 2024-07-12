@@ -7,7 +7,6 @@ import {getValue, type Value} from "./utils/value";
 import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception";
 import type {Config, ScreensConfig} from "tailwindcss/types/config";
 import {getTailwindTheme} from "./theme";
-import {isColor} from "./utils/is-color";
 import {CalculateHexFromString} from "./utils/calculate-hex-from-string";
 import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex";
 import {buildModifier} from "./utils/build-modifier";
@@ -132,16 +131,20 @@ export const parse = (input: string, config?: Config): AST | Error => {
         }
     }
 
-    if (!valueWithoutModifier) {
-        valueWithoutModifier = 'DEFAULT'
+    if (!value) {
+        value = 'DEFAULT'
     }
     //check value against each scale of available plugins
-    let matchedPlugin = availablePlugins.find(({scaleKey}) => valueWithoutModifier.split('-')[0] in theme[scaleKey])
+    let matchedPlugin = availablePlugins.find(({scaleKey}) => value.split('-')[0] in theme[scaleKey])
     if (!matchedPlugin) {
         throw new PluginNotFoundException(base)
     }
 
-    const val = getValue(valueWithoutModifier, matchedPlugin, theme[matchedPlugin.scaleKey])
+    if(matchedPlugin.type !== "color"){
+        modifier = null
+    }
+
+    const val = getValue(matchedPlugin.type === "color" ? valueWithoutModifier : value, matchedPlugin, theme[matchedPlugin.scaleKey])
 
     return {
         root: root,
