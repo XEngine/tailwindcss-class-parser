@@ -18,6 +18,7 @@ const table = [
     [{property: "marginRight", value: "1rem"}, "mr-4"],
     [{property: "marginRight", value: "-1rem"}, "-mr-4"],
     [{property: "marginRight", value: "1rem", negative: true}, "-mr-4"],
+    [{property: "width", value: "50%"}, "w-1/2"],
 ]
 
 //@ts-ignore

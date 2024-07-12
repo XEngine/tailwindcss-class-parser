@@ -128,3 +128,26 @@ it("should parse a functional class with variants", () => {
         }
     )
 })
+it("w-1/2", () => {
+    expect(parse("w-1/2")).toEqual(
+        {
+            "root": "w",
+            "kind": "functional",
+            "property": "width",
+            "value": "50%",
+            "valueDef": {
+                "value": "50%",
+                "class": [
+                    "width"
+                ],
+                "raw": "1/2",
+                "kind": "length"
+            },
+            "variants": [],
+            "modifier": null,
+            "important": false,
+            "negative": false,
+            "arbitrary": false
+        }
+    )
+})
