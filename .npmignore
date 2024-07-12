@@ -1,2 +1,6 @@
 src
 index.html
+.idea
+.github
+vite.config.js
+tsconfig.js

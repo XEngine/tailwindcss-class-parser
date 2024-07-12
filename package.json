@@ -18,15 +18,17 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "main": "./dist/tailwindcss-class-parser.umd.js",
+  "types": "./dist/tailwindcss-class-parser.es.d.ts",
+  "main": "./dist/tailwindcss-class-parser.umd.cjs",
+  "module": "./dist/tailwindcss-class-parser.js",
   "exports": {
     ".": {
-      "require": "./dist/tailwindcss-class-parser.umd.js",
-      "import": "./dist/tailwindcss-class-parser.es.js"
+      "import": "./dist/tailwindcss-class-parser.js",
+      "require": "./dist/tailwindcss-class-parser.umd.cjs"
     }
   },
   "peerDependencies": {
-    "tailwindcss": "^3.4.4"
+    "tailwindcss": "*"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.6",

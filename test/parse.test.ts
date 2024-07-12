@@ -1,5 +1,5 @@
 import {expect, it} from 'vitest'
-import {parse} from "./parse.ts";
+import {parse} from "../src";
 
 it('should parse a functional class', () => {
     expect(parse("bg-red-500")).toEqual(

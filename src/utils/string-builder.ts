@@ -1,4 +1,4 @@
-import type {Variant} from "../plugins.ts";
+import type {Variant} from "../plugins";
 
 export class StringBuilder {
     private _classRoot: string = ""

@@ -1,5 +1,5 @@
 import {decodeArbitraryValue} from "./utils/decodeArbitraryValue";
-import {type Variant, variants} from "./plugins.ts";
+import {type Variant, variants} from "./plugins";
 import type {ScreensConfig} from "tailwindcss/types/config";
 
 export function parseVariant(variant: string, screens: ScreensConfig): Variant  {

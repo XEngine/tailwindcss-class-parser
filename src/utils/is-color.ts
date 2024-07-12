@@ -1,5 +1,5 @@
 import type {CustomThemeConfig} from "tailwindcss/types/config"
-import {segment} from "./segment.ts";
+import {segment} from "./segment";
 
 const HASH = 0x23
 

@@ -1,4 +1,4 @@
-import {parse} from "./parse.ts";
-import {classname} from "./classname.ts";
+import {parse} from "./parse";
+import {classname} from "./classname";
 
 export {parse, classname}

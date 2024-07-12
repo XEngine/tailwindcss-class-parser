@@ -7,18 +7,20 @@
     "allowJs": true,
 
     "moduleResolution": "Bundler",
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "preserveConstEnums": true,
-    "noEmit": true,
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "esModuleInterop": true,
 
     "skipLibCheck": true,
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"
+    "outDir": "dist"
   },
-  "include": ["src/**/*.ts"],
+  "files": ["src/index.ts"],
   "exclude": ["node_modules"]
 }

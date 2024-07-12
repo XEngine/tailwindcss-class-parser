@@ -2,15 +2,15 @@ import {segment} from "./utils/segment";
 import {findRoot} from "./find-root";
 import {type FunctionalPlugin, functionalPlugins, namedPlugins, type Variant} from "./plugins";
 import {parseVariant} from "./parse-variant";
-import {inferDataType} from "./utils/infer-data-type.ts";
-import {getValue, type Value} from "./utils/value.ts";
-import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception.ts";
-import type {CustomThemeConfig, ScreensConfig} from "tailwindcss/types/config";
-import {getTailwindTheme} from "./theme.ts";
-import {isColor} from "./utils/is-color.ts";
-import {CalculateHexFromString} from "./utils/calculate-hex-from-string.ts";
-import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex.ts";
-import {buildModifier} from "./utils/build-modifier.ts";
+import {inferDataType} from "./utils/infer-data-type";
+import {getValue, type Value} from "./utils/value";
+import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception";
+import type {Config, ScreensConfig} from "tailwindcss/types/config";
+import {getTailwindTheme} from "./theme";
+import {isColor} from "./utils/is-color";
+import {CalculateHexFromString} from "./utils/calculate-hex-from-string";
+import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex";
+import {buildModifier} from "./utils/build-modifier";
 
 export type State = {
     important: boolean
@@ -36,7 +36,7 @@ export type Error = {
     message: string
 }
 
-export const parse = (input: string, config?: CustomThemeConfig): AST | Error => {
+export const parse = (input: string, config?: Config): AST | Error => {
     const theme = getTailwindTheme(config)
     let state: State = {
         important: false,
@@ -131,10 +131,6 @@ export const parse = (input: string, config?: CustomThemeConfig): AST | Error =>
             negative: state.negative
         }
     }
-
-    //@ts-ignore
-    let isValueColor = isColor(valueWithoutModifier, theme)
-
 
     if (!valueWithoutModifier) {
         valueWithoutModifier = 'DEFAULT'

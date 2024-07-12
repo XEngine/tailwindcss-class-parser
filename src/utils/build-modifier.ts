@@ -1,4 +1,4 @@
-import {StringBuilder} from "./string-builder.ts";
+import {StringBuilder} from "./string-builder";
 
 /*
  * possible modifiers

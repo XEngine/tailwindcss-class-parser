@@ -1,19 +1,12 @@
-import {functionalPlugins, namedPlugins, type Variant} from "./plugins.ts";
-import {getTailwindTheme} from "./theme.ts";
-import {isColor} from "./utils/is-color.ts";
-import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception.ts";
-import type {CustomThemeConfig} from "tailwindcss/types/config";
-import {StringBuilder} from "./utils/string-builder.ts";
-import {CalculateHexFromString} from "./utils/calculate-hex-from-string.ts";
-import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex.ts";
-import {buildModifier} from "./utils/build-modifier.ts";
-
-
-type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
-    ? Acc[number]
-    : Enumerate<N, [...Acc, Acc['length']]>
-
-type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+import {functionalPlugins, namedPlugins, type Variant} from "./plugins";
+import {getTailwindTheme} from "./theme";
+import {isColor} from "./utils/is-color";
+import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception";
+import type {Config} from "tailwindcss/types/config";
+import {StringBuilder} from "./utils/string-builder";
+import {CalculateHexFromString} from "./utils/calculate-hex-from-string";
+import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex";
+import {buildModifier} from "./utils/build-modifier";
 
 export type AstDeclaration = {
     property: string
@@ -24,7 +17,7 @@ export type AstDeclaration = {
     negative?: boolean,
 }
 
-export const classname = (ast: AstDeclaration, config?: CustomThemeConfig): string => {
+export const classname = (ast: AstDeclaration, config?: Config): string => {
     const theme = getTailwindTheme(config)
     const stringBuilder = new StringBuilder()
     let negative = ast.negative || false
@@ -39,12 +32,12 @@ export const classname = (ast: AstDeclaration, config?: CustomThemeConfig): stri
         negative = true
     }
 
-    const [namedPluginClassName, namedPluginClassPlugin] = [...namedPlugins.entries()].find(([, plugin]) => plugin.value === ast.value) || []
+    const [namedPluginClassName,] = [...namedPlugins.entries()].find(([, plugin]) => plugin.value === ast.value) || []
     if (namedPluginClassName) {
         return stringBuilder.addRoot(namedPluginClassName).toString()
     }
 
-    const [root, possiblePlugins = []] = [...functionalPlugins.entries()].find(([root, plugins]) => plugins.some(o => o.ns === ast.property)) || []
+    const [root, possiblePlugins = []] = [...functionalPlugins.entries()].find(([, plugins]) => plugins.some(o => o.ns === ast.property)) || []
     if (!root) {
         throw new PluginNotFoundException(ast.property)
     }

@@ -1,5 +1,5 @@
 import {expect, test} from 'vitest'
-import {classname} from "./classname.ts";
+import {classname} from "../src";
 
 const table = [
     [{property: "display", value: "flex"}, "flex"],

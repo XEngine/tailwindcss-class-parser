@@ -1,6 +1,6 @@
-import type {DataType} from "./infer-data-type.ts";
-import type {FunctionalPlugin} from "../plugins.ts";
-import {UnmatchedValueException} from "../exceptions/unmatched-value-exception.ts";
+import type {DataType} from "./infer-data-type";
+import type {FunctionalPlugin} from "../plugins";
+import {UnmatchedValueException} from "../exceptions/unmatched-value-exception";
 
 export type Value = {
     kind: DataType,
