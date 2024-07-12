@@ -1,5 +1,6 @@
 import type {CustomThemeConfig} from "tailwindcss/types/config"
 import {segment} from "./segment";
+import get from "lodash/get";
 
 const HASH = 0x23
 
@@ -207,7 +208,7 @@ export function isColor(value: string, theme?: CustomThemeConfig): boolean {
 
     if (theme) {
         const [trueValue,] = segment(value, '/')
-        isThemeColor = !!trueValue.split('-').reduce((acc, val) => acc[val], theme.colors as any);
+        isThemeColor = !!get(theme.colors as any, trueValue.split('-').join('.'))
     }
 
     return (

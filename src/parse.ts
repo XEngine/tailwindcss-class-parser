@@ -10,6 +10,7 @@ import {getTailwindTheme} from "./theme";
 import {CalculateHexFromString} from "./utils/calculate-hex-from-string";
 import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex";
 import {buildModifier} from "./utils/build-modifier";
+import {isColor} from "./utils/is-color";
 
 export type State = {
     important: boolean
@@ -98,7 +99,7 @@ export const parse = (input: string, config?: Config): AST | Error => {
     let modifier: string | null = null
     let [valueWithoutModifier, modifierSegment = null] = segment(value || "", '/')
 
-    if (modifierSegment) {
+    if (modifierSegment && isColor(valueWithoutModifier, theme)) {
         modifier = buildModifier(modifierSegment, theme.opacity)
     }
 
@@ -138,10 +139,6 @@ export const parse = (input: string, config?: Config): AST | Error => {
     let matchedPlugin = availablePlugins.find(({scaleKey}) => value.split('-')[0] in theme[scaleKey])
     if (!matchedPlugin) {
         throw new PluginNotFoundException(base)
-    }
-
-    if(matchedPlugin.type !== "color"){
-        modifier = null
     }
 
     const val = getValue(matchedPlugin.type === "color" ? valueWithoutModifier : value, matchedPlugin, theme[matchedPlugin.scaleKey])

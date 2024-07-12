@@ -1,6 +1,7 @@
 import type {DataType} from "./infer-data-type";
 import type {FunctionalPlugin} from "../plugins";
 import {UnmatchedValueException} from "../exceptions/unmatched-value-exception";
+import get from "lodash/get";
 
 export type Value = {
     kind: DataType,
@@ -11,7 +12,7 @@ export type Value = {
 
 export const getValue = (value: string, plugin: FunctionalPlugin, scale: any): Value => {
     if (plugin.type === "color") {
-        let matchedColor = value.split('-').reduce((acc, val) => acc[val], scale);
+        let matchedColor = get(scale, value.split('-').join('.'))
         if (!matchedColor) {
             throw new UnmatchedValueException(plugin.ns, value)
         }
