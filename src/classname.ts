@@ -7,6 +7,7 @@ import {StringBuilder} from "./utils/string-builder";
 import {CalculateHexFromString} from "./utils/calculate-hex-from-string";
 import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex";
 import {buildModifier} from "./utils/build-modifier";
+import get from "lodash/get";
 
 export type AstDeclaration = {
     property: string
@@ -17,7 +18,7 @@ export type AstDeclaration = {
     negative?: boolean,
 }
 
-export const classname = (ast: AstDeclaration, config?: Config): string => {
+export const classname = (ast: AstDeclaration, config?: Config): string | undefined => {
     const theme = getTailwindTheme(config)
     const stringBuilder = new StringBuilder()
     let negative = ast.negative || false
@@ -54,7 +55,7 @@ export const classname = (ast: AstDeclaration, config?: Config): string => {
             throw new PluginNotFoundException(ast.property)
         }
 
-        let tailwindThemeColor = ast.value.split('-').reduce((acc, val) => acc[val], theme[matchedPlugin.scaleKey || "colors"] as any)
+        let tailwindThemeColor = get(theme[matchedPlugin.scaleKey || "colors"] as any, ast.value.split('-').join('.'))
         if (tailwindThemeColor && typeof tailwindThemeColor !== "object") {
             //user entered a value like "red-500". we found equivalent tailwind theme color.
             //return TW class directly like "bg-red-500" with modifiers and variants
@@ -63,9 +64,12 @@ export const classname = (ast: AstDeclaration, config?: Config): string => {
                 .addValue(ast.value)
                 .toString()
         }
-        //at this point we know user entered a value like "#ff0000", or just "red" maybe rgba, hsla, etc.
+        //at this point we know user entered a value like "#ff0000", or rgba, hsla, etc.
         //try to get hex color and check if tailwind has it.
         const color = CalculateHexFromString(ast.value)
+        if(!color) {
+            return undefined
+        }
         return stringBuilder
             .appendModifier(buildModifier(color.alpha || ast.modifier, theme.opacity))
             .addValue(findTailwindColorFromHex(color.hex, theme[matchedPlugin.scaleKey || "colors"]) || StringBuilder.makeArbitrary(color.hex))
