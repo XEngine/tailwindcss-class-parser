@@ -73,8 +73,8 @@ export const classname = (ast: AstDeclaration, config?: Config): string | undefi
         return stringBuilder
             .appendModifier(buildModifier(color.alpha || ast.modifier, theme.opacity))
             .addValue(
-                findTailwindColorFromHex(color.hex, theme[matchedPlugin.scaleKey || "colors"])
-                || StringBuilder.makeArbitrary(color.hex)
+                findTailwindColorFromHex(color.hex, theme[matchedPlugin.scaleKey || "colors"]) ||
+                StringBuilder.makeArbitrary(color.hex)
             )
             .toString()
     }
