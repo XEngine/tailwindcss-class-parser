@@ -4,7 +4,6 @@ import {type FunctionalPlugin, functionalPlugins, namedPlugins, type Variant} fr
 import {parseVariant} from "./parse-variant";
 import {inferDataType} from "./utils/infer-data-type";
 import {getValue, type Value} from "./utils/value";
-import {PluginNotFoundException} from "./exceptions/plugin-not-found-exception";
 import type {Config, ScreensConfig} from "tailwindcss/types/config";
 import {getTailwindTheme} from "./theme";
 import {CalculateHexFromString} from "./utils/calculate-hex-from-string";
@@ -98,7 +97,6 @@ export const parse = (input: string, config?: Config): AST | Error => {
     const availablePlugins = functionalPlugins.get(root) as FunctionalPlugin[]
     let modifier: string | null = null
     let [valueWithoutModifier, modifierSegment = null] = segment(value || "", '/')
-
     if (modifierSegment && isColor(valueWithoutModifier, theme)) {
         modifier = buildModifier(modifierSegment, theme.opacity)
     }
@@ -110,6 +108,13 @@ export const parse = (input: string, config?: Config): AST | Error => {
 
         if (unitType === "color") {
             const color = CalculateHexFromString(arbitraryValue)
+            if(!color){
+                return {
+                    root: base,
+                    kind: "error",
+                    message: "Color is not correct",
+                }
+            }
             valueWithoutModifier = findTailwindColorFromHex(color.hex, theme[associatedPluginByType?.scaleKey || "colors"]) || color.hex
         }
 
@@ -135,10 +140,15 @@ export const parse = (input: string, config?: Config): AST | Error => {
     if (!value) {
         value = 'DEFAULT'
     }
+
     //check value against each scale of available plugins
-    let matchedPlugin = availablePlugins.find(({scaleKey}) => value.split('-')[0] in theme[scaleKey])
+    let matchedPlugin = availablePlugins.find(({scaleKey}) => value.split('-')[0] in theme[scaleKey] || valueWithoutModifier in theme[scaleKey])
     if (!matchedPlugin) {
-        throw new PluginNotFoundException(base)
+        return {
+            root: base,
+            kind: "error",
+            message: `found "${availablePlugins.map(x => x.ns).join(', ')}" plugins but unable to determine which one is matched to given value "${value}".`,
+        }
     }
 
     const val = getValue(matchedPlugin.type === "color" ? valueWithoutModifier : value, matchedPlugin, theme[matchedPlugin.scaleKey])
