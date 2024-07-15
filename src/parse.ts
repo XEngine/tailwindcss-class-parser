@@ -104,7 +104,7 @@ export const parse = (input: string, config?: Config): AST | Error => {
     if (valueWithoutModifier && valueWithoutModifier[0] === '[' && valueWithoutModifier[valueWithoutModifier.length - 1] === ']') {
         let arbitraryValue = valueWithoutModifier.slice(1, -1)
         const unitType = inferDataType(arbitraryValue, [...availablePlugins.values()].map(({type}) => type))
-        const associatedPluginByType = availablePlugins!.find(plugin => plugin.type === unitType)
+        let associatedPluginByType = availablePlugins!.find(plugin => plugin.type === unitType)
 
         if (unitType === "color") {
             const color = CalculateHexFromString(arbitraryValue)
@@ -116,6 +116,12 @@ export const parse = (input: string, config?: Config): AST | Error => {
                 }
             }
             valueWithoutModifier = findTailwindColorFromHex(color.hex, theme[associatedPluginByType?.scaleKey || "colors"]) || color.hex
+        }else{
+            //It's not color, but it's still an arbitrary. We are just going to do parse it
+            //The result might not be correct, but it's better than nothing and even tailwind will parse it anyway
+            if(availablePlugins.length > 0){
+                associatedPluginByType = availablePlugins[0]
+            }
         }
 
         return {

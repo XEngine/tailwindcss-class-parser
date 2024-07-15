@@ -36,6 +36,12 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ["min-h", [
         {scaleKey: "minHeight", ns: 'minHeight', class: ['min-height'], type: 'length'},
     ]],
+    ["max-h", [
+        {scaleKey: "maxHeight", ns: 'maxHeight', class: ['max-height'], type: 'length'},
+    ]],
+    ["size", [
+        {scaleKey: "size", ns: 'size', class: ['width', 'height'], type: 'length'},
+    ]],
     ["m", [
         {scaleKey: "margin", ns: 'margin', class: ['margin'], type: 'length', supportNegative: true},
     ]],
@@ -82,6 +88,16 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
         {scaleKey: "fontSize", ns: 'fontSize', class: ['font-size'], type: 'length'},
         {scaleKey: "textColor", ns: 'textColor', class: ['color'], type: 'color'},
     ]],
+    ["indent", [
+        {scaleKey: "textIndent", ns: 'textIndent', class: ['text-indent'], type: 'length', supportNegative: true},
+    ]],
+    ["underline-offset", [
+        {scaleKey: "textUnderlineOffset", ns: 'textUnderlineOffset', class: ['text-underline-offset'], type: 'number'},
+    ]],
+    ["decoration", [
+        {scaleKey: "textDecorationThickness", ns: 'textDecorationThickness', class: ['text-decoration-thickness'], type: 'number'},
+        {scaleKey: "textDecorationColor", ns: 'textDecorationColor', class: ['text-decoration-color'], type: 'color'},
+    ]],
     ["font", [
         {scaleKey: "fontWeight", ns: 'fontWeight', class: ['font-weight'], type: 'number'},
         {scaleKey: "fontFamily", ns: 'fontFamily', class: ['font-family'], type: 'family-name'},
@@ -97,6 +113,18 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
         {scaleKey: "backgroundPosition", ns: 'backgroundPosition', class: ['background-position'], type: 'position'},
         {scaleKey: "backgroundSize", ns: 'backgroundSize', class: ['background-size'], type: 'bg-size'},
         {scaleKey: "backgroundColor", ns: 'backgroundColor', class: ['background-color'], type: 'color'},
+    ]],
+    ["from", [
+        {scaleKey: "gradientColorStops", ns: 'gradientStopsFrom', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'color'},
+        {scaleKey: "gradientColorStopPositions", ns: 'gradientColorFromStops', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'percentage'},
+    ]],
+    ["to", [
+        {scaleKey: "gradientColorStops", ns: 'gradientStopsTo', class: ['--tw-gradient-to', '--tw-gradient-to-position'], type: 'color'},
+        {scaleKey: "gradientColorStopPositions", ns: 'gradientColorToStops', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'percentage'},
+    ]],
+    ["via", [
+        {scaleKey: "gradientColorStops", ns: 'gradientStopsVia', class: ['--tw-gradient-from'], type: 'color'},
+        {scaleKey: "gradientColorStopPositions", ns: 'gradientColorViaStops', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'percentage'},
     ]],
     ["fill", [
         {scaleKey: "fill", ns: 'fillColor', class: ['fill'], type: 'color'},
@@ -138,6 +166,18 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ["gap-y", [
         {scaleKey: "gap", ns: 'gapY', class: ['gap'], type: 'length'},
     ]],
+    ["divide-x", [
+        {scaleKey: "divideWidth", ns: 'divideX', class: ['border-left-width', 'border-right-width'], type: 'length'},
+    ]],
+    ["divide-y", [
+        {scaleKey: "divideWidth", ns: 'divideY', class: ['border-top-width', 'border-bottom-width'], type: 'length'},
+    ]],
+    ["divide", [
+        {scaleKey: "divideColor", ns: 'divideColor', class: ['--tw-divide-color'], type: 'color'},
+    ]],
+    ["divide-opacity", [
+        {scaleKey: "divideOpacity", ns: 'divideOpacity', class: ['--tw-divide-opacity'], type: 'number'},
+    ]],
     ["col", [
         {scaleKey: "gridColumn", ns: 'gridColumn', class: ['grid-column'], type: 'number'},
     ]],
@@ -157,8 +197,13 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
         {scaleKey: "boxShadow", ns: 'boxShadow', class: ['box-shadow'], type: 'length'},
     ]],
     ["transition", [
-        {scaleKey: "transitionProperty", ns: 'transitionProperty', class: ['transition-property'], type: 'number'},
+        {scaleKey: "transitionProperty", ns: 'transitionProperty', class: ['transition-property'], type: 'named'},
+    ]],
+    ["duration", [
         {scaleKey: "transitionDuration", ns: 'transitionDuration', class: ['transition-duration'], type: 'number'},
+    ]],
+    ["delay", [
+        {scaleKey: "transitionDelay", ns: 'transitionDelay', class: ['transition-delay'], type: 'number'},
     ]],
     ["scale", [
         {scaleKey: "scale", ns: 'scale', class: ['scale'], type: 'number', supportNegative: true},
@@ -217,16 +262,58 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ["order", [
         {scaleKey: "order", ns: 'order', class: ['order'], type: 'length', supportNegative: true},
     ]],
+    ["blur", [
+        {scaleKey: "blur", ns: 'blur', class: ['filter'], type: 'number'},
+    ]],
+    ["brightness", [
+        {scaleKey: "brightness", ns: 'brightness', class: ['filter'], type: 'number'},
+    ]],
+    ["contrast", [
+        {scaleKey: "contrast", ns: 'contrast', class: ['filter'], type: 'number'},
+    ]],
+    ["drop-shadow", [
+        {scaleKey: "dropShadow", ns: 'dropShadow', class: ['filter'], type: 'number'},
+    ]],
+    ["hue-rotate", [
+        {scaleKey: "hueRotate", ns: 'hueRotate', class: ['filter'], type: 'number'},
+    ]],
+    ["saturate", [
+        {scaleKey: "saturate", ns: 'saturate', class: ['filter'], type: 'number'},
+    ]],
+    ["backdrop-blur", [
+        {scaleKey: "blur", ns: 'blur', class: ['filter'], type: 'number'},
+    ]],
+    ["backdrop-brightness", [
+        {scaleKey: "backdropBrightness", ns: 'backdropBrightness', class: ['backdrop-filter'], type: 'number'},
+    ]],
+    ["backdrop-contrast", [
+        {scaleKey: "backdropContrast", ns: 'backdropContrast', class: ['backdrop-filter'], type: 'number'},
+    ]],
+    ["backdrop-drop-shadow", [
+        {scaleKey: "backdropDropShadow", ns: 'backdropDropShadow', class: ['backdrop-filter'], type: 'number'},
+    ]],
+    ["backdrop-hue-rotate", [
+        {scaleKey: "backdropHueRotate", ns: 'backdropHueRotate', class: ['backdrop-filter'], type: 'number'},
+    ]],
+    ["backdrop-saturate", [
+        {scaleKey: "backdropSaturate", ns: 'backdropSaturate', class: ['backdrop-filter'], type: 'number'},
+    ]],
 ]);
 
 export const namedPlugins = new Map<string, NamedPlugin>([
     // Border Styles
-    ["border-solid", {class: ['border-style'], value: 'solid', ns: 'border'}],
-    ["border-dashed", {class: ['border-style'], value: 'dashed', ns: 'border'}],
-    ["border-dotted", {class: ['border-style'], value: 'dotted', ns: 'border'}],
-    ["border-double", {class: ['border-style'], value: 'double', ns: 'border'}],
-    ["border-none", {class: ['border-style'], value: 'none', ns: 'border'}],
+    ["border-solid", {class: ['border-style'], value: 'solid', ns: 'borderStyle'}],
+    ["border-dashed", {class: ['border-style'], value: 'dashed', ns: 'borderStyle'}],
+    ["border-dotted", {class: ['border-style'], value: 'dotted', ns: 'borderStyle'}],
+    ["border-double", {class: ['border-style'], value: 'double', ns: 'borderStyle'}],
+    ["border-none", {class: ['border-style'], value: 'none', ns: 'borderStyle'}],
     ["ring-inset", {class: ['--tw-ring-inset'], value: 'inset', ns: 'ring'}],
+
+    ["divide-solid", {class: ['divide-style'], value: 'solid', ns: 'divideStyle'}],
+    ["divide-dashed", {class: ['divide-style'], value: 'dashed', ns: 'divideStyle'}],
+    ["divide-dotted", {class: ['divide-style'], value: 'dotted', ns: 'divideStyle'}],
+    ["divide-double", {class: ['divide-style'], value: 'double', ns: 'divideStyle'}],
+    ["divide-none", {class: ['divide-style'], value: 'none', ns: 'divideStyle'}],
 
     // Display
     ["block", {class: ['display'], value: 'block', ns: 'display'}],
@@ -245,6 +332,25 @@ export const namedPlugins = new Map<string, NamedPlugin>([
     // Visibility
     ["visible", {class: ['visibility'], value: 'visible', ns: 'visibility'}],
     ["invisible", {class: ['visibility'], value: 'hidden', ns: 'visibility'}],
+
+    // Hyphens
+    ["hyphens-none", {class: ['hyphens'], value: 'none', ns: 'hyphens'}],
+    ["hyphens-manual", {class: ['hyphens'], value: 'manual', ns: 'hyphens'}],
+    ["hyphens-auto", {class: ['hyphens'], value: 'auto', ns: 'hyphens'}],
+
+    // Word Break
+    ["break-normal", {class: ['word-break', 'overflow-wrap'], value: 'normal', ns: 'wordBreak'}],
+    ["break-words", {class: ['overflow-wrap'], value: 'break-word', ns: 'wordBreak'}],
+    ["break-all", {class: ['word-break'], value: 'break-all', ns: 'wordBreak'}],
+    ["break-keep", {class: ['word-break'], value: 'keep-all', ns: 'wordBreak'}],
+
+    // Whitespace
+    ["whitespace-normal", {class: ['white-space'], value: 'normal', ns: 'whitespace'}],
+    ["whitespace-nowrap", {class: ['white-space'], value: 'nowrap', ns: 'whitespace'}],
+    ["whitespace-pre", {class: ['white-space'], value: 'pre', ns: 'whitespace'}],
+    ["whitespace-pre-line", {class: ['white-space'], value: 'pre-line', ns: 'whitespace'}],
+    ["whitespace-pre-wrap", {class: ['white-space'], value: 'pre-wrap', ns: 'whitespace'}],
+    ["whitespace-break-spaces", {class: ['white-space'], value: 'break-spaces', ns: 'whitespace'}],
 
     // Position
     ["static", {class: ['position'], value: 'static', ns: 'position'}],
@@ -267,10 +373,30 @@ export const namedPlugins = new Map<string, NamedPlugin>([
     ["overflow-y-visible", {class: ['overflow-y'], value: 'visible', ns: 'overflowY'}],
     ["overflow-y-scroll", {class: ['overflow-y'], value: 'scroll', ns: 'overflowY'}],
 
+    // Text Align
+    ["text-left", {class: ['text-align'], value: 'left', ns: 'textAlign'}],
+    ["text-center", {class: ['text-align'], value: 'center', ns: 'textAlign'}],
+    ["text-right", {class: ['text-align'], value: 'right', ns: 'textAlign'}],
+    ["text-justify", {class: ['text-align'], value: 'justify', ns: 'textAlign'}],
+    ["text-start", {class: ['text-align'], value: 'start', ns: 'textAlign'}],
+    ["text-end", {class: ['text-align'], value: 'end', ns: 'textAlign'}],
+
     // Text Decoration
-    ["underline", {class: ['text-decoration'], value: 'underline', ns: 'textDecoration'}],
-    ["line-through", {class: ['text-decoration'], value: 'line-through', ns: 'textDecoration'}],
-    ["no-underline", {class: ['text-decoration'], value: 'none', ns: 'textDecoration'}],
+    ["underline", {class: ['text-decoration-line'], value: 'underline', ns: 'textDecoration'}],
+    ["line-through", {class: ['text-decoration-line'], value: 'line-through', ns: 'textDecoration'}],
+    ["overline", {class: ['text-decoration-line'], value: 'overline', ns: 'textDecoration'}],
+    ["no-underline", {class: ['text-decoration-line'], value: 'none', ns: 'textDecoration'}],
+
+    // Text Wrap
+    ["text-wrap", {class: ['text-wrap'], value: 'wrap', ns: 'textWrap'}],
+    ["text-nowrap", {class: ['text-wrap'], value: 'nowrap', ns: 'textWrap'}],
+    ["text-balance", {class: ['text-wrap'], value: 'balance', ns: 'textWrap'}],
+    ["text-pretty", {class: ['text-wrap'], value: 'pretty', ns: 'textWrap'}],
+
+    // Text Overflow
+    ["truncate", {class: ['overflow', 'text-overflow', 'white-space'], value: '', ns: 'TextOverflow'}],
+    ["text-ellipsis", {class: ['text-overflow'], value: 'ellipsis', ns: 'textWrap'}],
+    ["text-clip", {class: ['text-overflow'], value: 'clip', ns: 'textWrap'}],
 
     // Text Transform
     ["uppercase", {class: ['text-transform'], value: 'uppercase', ns: 'textTransform'}],
@@ -331,6 +457,24 @@ export const namedPlugins = new Map<string, NamedPlugin>([
     ["flex-shrink", {class: ['flex-shrink'], value: '1', ns: 'flexShrink'}],
     ["flex-shrink-0", {class: ['flex-shrink'], value: '0', ns: 'flexShrink'}],
 
+    // Filters
+    ["grayscale", {class: ['filter'], value: 'grayscale(100%)', ns: 'grayScale'}],
+    ["grayscale-0", {class: ['filter'], value: 'grayscale(0)', ns: 'grayScale'}],
+    ["invert", {class: ['filter'], value: 'invert(100%)', ns: 'invert'}],
+    ["invert-0", {class: ['filter'], value: 'invert(0)', ns: 'invert'}],
+    ["sepia", {class: ['filter'], value: 'sepia(100%)', ns: 'sepia'}],
+    ["sepia-0", {class: ['filter'], value: 'sepia(0)', ns: 'sepia'}],
+    ["backdrop-grayscale", {class: ['backdrop-filter'], value: 'backdrop-grayscale(100%)', ns: 'backdropGrayScale'}],
+    ["backdrop-grayscale-0", {class: ['backdrop-filter'], value: 'backdrop-grayscale(0)', ns: 'backdropGrayScale'}],
+    ["backdrop-invert", {class: ['backdrop-filter'], value: 'backdrop-invert(100%)', ns: 'backdrop-invert'}],
+    ["backdrop-invert-0", {class: ['backdrop-filter'], value: 'backdrop-invert(0)', ns: 'backdrop-invert'}],
+    ["backdrop-sepia", {class: ['backdrop-filter'], value: 'backdrop-sepia(100%)', ns: 'backdrop-sepia'}],
+    ["backdrop-sepia-0", {class: ['backdrop-filter'], value: 'backdrop-sepia(0)', ns: 'backdrop-sepia'}],
+
+    ["ease-linear", {class: ['transition-timing-function'], value: 'linear', ns: 'transitionTiming'}],
+    ["ease-in", {class: ['transition-timing-function'], value: 'cubic-bezier(0.4, 0, 1, 1)', ns: 'transitionTiming'}],
+    ["ease-out", {class: ['transition-timing-function'], value: 'cubic-bezier(0, 0, 0.2, 1)', ns: 'transitionTiming'}],
+    ["ease-in-out", {class: ['transition-timing-function'], value: 'cubic-bezier(0.4, 0, 0.2, 1)', ns: 'transitionTiming'}],
 ])
 
 export const variants = new Map<string, Variant["type"]>([

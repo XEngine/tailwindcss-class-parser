@@ -55,7 +55,12 @@ export class StringBuilder {
 
     }
 
+    static makeInputArbitraryFormat(input: string): string {
+        //replace whitespaces with underscores
+        return input.replace(/\s/g, '_')
+    }
+
     static makeArbitrary(input: string) {
-        return "[" + input + "]"
+        return "[" + StringBuilder.makeInputArbitraryFormat(input) + "]"
     }
 }
