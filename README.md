@@ -98,4 +98,5 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 ## Acknowledgements
 
 Special thanks to the Tailwind CSS team for their amazing work on Tailwind CSS.
+
 @siddharthkp from https://github.com/ui-devtools/tailwind-utils
