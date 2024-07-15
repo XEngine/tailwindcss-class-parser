@@ -1,3 +1,4 @@
+
 # Tailwindcss Class Parser
 
 Tailwindcss Parser is an open-source library for parsing Tailwind CSS classes into an Abstract Syntax Tree (AST) and AST to classname. This allows for easier manipulation and analysis of Tailwind CSS classes in a declarative manner. If you are into a WYSIWYG like CMS builders this library can parse classes from blocks (or whatever you are using as a name for your components) or convert class definitions into classnames into your blocks.
@@ -25,7 +26,7 @@ To use the Tailwindcss Parser, you need to import the `parse` function from the 
 ```javascript
 import { parse } from '@xengine/tailwindcss-class-parser';
 
-const ast = parse('lg:hover:text-red-500');
+const ast = parse('lg:hover:text-red-500/70');
 
 console.log(ast);
 /*
@@ -39,7 +40,8 @@ Output:
         class: ["color"],
         raw: "red-500"
     },
-    modifier: [
+    modifier: "70",
+    variants: [
         {
             kind: "named",
             type: "interaction",
@@ -98,5 +100,4 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 ## Acknowledgements
 
 Special thanks to the Tailwind CSS team for their amazing work on Tailwind CSS.
-
-@siddharthkp from https://github.com/ui-devtools/tailwind-utils
+[@siddharthkp](https://github.com/siddharthkp) from https://github.com/ui-devtools/tailwind-utils
