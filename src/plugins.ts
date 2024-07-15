@@ -421,6 +421,11 @@ export const namedPlugins = new Map<string, NamedPlugin>([
     ["bg-repeat-round", {class: ['background-repeat'], value: 'round', ns: 'backgroundRepeat'}],
     ["bg-repeat-space", {class: ['background-repeat'], value: 'space', ns: 'backgroundRepeat'}],
 
+    // Background Origin
+    ["bg-origin-border", {class: ['background-origin'], value: 'border', ns: 'backgroundOrigin'}],
+    ["bg-origin-padding", {class: ['background-origin'], value: 'padding', ns: 'backgroundOrigin'}],
+    ["bg-origin-content", {class: ['background-origin'], value: 'content', ns: 'backgroundOrigin'}],
+
     // Flex Direction
     ["flex-row", {class: ['flex-direction'], value: 'row', ns: 'flexDirection'}],
     ["flex-row-reverse", {class: ['flex-direction'], value: 'row-reverse', ns: 'flexDirection'}],
