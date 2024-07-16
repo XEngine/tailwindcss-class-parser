@@ -97,7 +97,7 @@ export const parse = (input: string, config?: Config): AST | Error => {
     const availablePlugins = functionalPlugins.get(root) as FunctionalPlugin[]
     let modifier: string | null = null
     let [valueWithoutModifier, modifierSegment = null] = segment(value || "", '/')
-    if (modifierSegment && isColor(valueWithoutModifier, theme)) {
+    if (modifierSegment && isColor(valueWithoutModifier.replace(/[\[\]]/g, ""), theme)) {
         modifier = buildModifier(modifierSegment, theme.opacity)
     }
 
