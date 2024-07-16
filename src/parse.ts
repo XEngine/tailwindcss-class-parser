@@ -120,7 +120,7 @@ export const parse = (input: string, config?: Config): AST | Error => {
             //It's not color, but it's still an arbitrary. We are just going to do parse it
             //The result might not be correct, but it's better than nothing and even tailwind will parse it anyway
             if(availablePlugins.length > 0){
-                associatedPluginByType = availablePlugins[0]
+                associatedPluginByType = availablePlugins.find(x => x.type === unitType) || availablePlugins.find(x => x.type !== "color")
             }
         }
 
