@@ -116,15 +116,15 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ]],
     ["from", [
         {scaleKey: "gradientColorStops", ns: 'gradientStopsFrom', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'color'},
-        {scaleKey: "gradientColorStopPositions", ns: 'gradientColorFromStops', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'percentage'},
+        {scaleKey: "gradientColorStopPositions", ns: 'gradientStopsFromPosition', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'percentage'},
     ]],
     ["to", [
         {scaleKey: "gradientColorStops", ns: 'gradientStopsTo', class: ['--tw-gradient-to', '--tw-gradient-to-position'], type: 'color'},
-        {scaleKey: "gradientColorStopPositions", ns: 'gradientColorToStops', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'percentage'},
+        {scaleKey: "gradientColorStopPositions", ns: 'gradientStopsToPosition', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'percentage'},
     ]],
     ["via", [
         {scaleKey: "gradientColorStops", ns: 'gradientStopsVia', class: ['--tw-gradient-from'], type: 'color'},
-        {scaleKey: "gradientColorStopPositions", ns: 'gradientColorViaStops', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'percentage'},
+        {scaleKey: "gradientColorStopPositions", ns: 'gradientStopsViaPositions', class: ['--tw-gradient-from', '--tw-gradient-from-position'], type: 'percentage'},
     ]],
     ["fill", [
         {scaleKey: "fill", ns: 'fillColor', class: ['fill'], type: 'color'},
