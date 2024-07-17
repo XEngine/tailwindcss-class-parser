@@ -195,6 +195,7 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ]],
     ["shadow", [
         {scaleKey: "boxShadow", ns: 'boxShadow', class: ['box-shadow'], type: 'length'},
+        {scaleKey: "boxShadowColor", ns: 'boxShadowColor', class: ['box-shadow'], type: 'color'},
     ]],
     ["transition", [
         {scaleKey: "transitionProperty", ns: 'transitionProperty', class: ['transition-property'], type: 'named'},
