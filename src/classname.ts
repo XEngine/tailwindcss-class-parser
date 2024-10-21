@@ -18,7 +18,9 @@ export type AstDeclaration = {
     negative?: boolean,
 }
 
-export const classname = (ast: AstDeclaration, config?: Config): string | undefined => {
+export const EMPTY_CLASSNAME = ""
+
+export const classname = (ast: AstDeclaration, config?: Config): string => {
     const theme = getTailwindTheme(config)
     const stringBuilder = new StringBuilder()
     let negative = ast.negative || false
@@ -68,8 +70,9 @@ export const classname = (ast: AstDeclaration, config?: Config): string | undefi
         //try to get hex color and check if tailwind has it.
         const color = CalculateHexFromString(ast.value)
         if(!color) {
-            return undefined
+            return EMPTY_CLASSNAME
         }
+
         return stringBuilder
             .appendModifier(buildModifier(color.alpha || ast.modifier, theme.opacity))
             .addValue(

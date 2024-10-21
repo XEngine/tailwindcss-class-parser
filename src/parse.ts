@@ -10,6 +10,7 @@ import {CalculateHexFromString} from "./utils/calculate-hex-from-string";
 import {findTailwindColorFromHex} from "./utils/find-tailwind-color-from-hex";
 import {buildModifier} from "./utils/build-modifier";
 import {isColor} from "./utils/is-color";
+import {decodeArbitraryValue} from "./utils/decodeArbitraryValue";
 
 export type State = {
     important: boolean
@@ -36,6 +37,14 @@ export type Error = {
 }
 
 export const parse = (input: string, config?: Config): AST | Error => {
+    if(!input) {
+        return {
+            root: "",
+            kind: "error",
+            message: "Empty input"
+        }
+    }
+
     const theme = getTailwindTheme(config)
     let state: State = {
         important: false,
@@ -123,6 +132,8 @@ export const parse = (input: string, config?: Config): AST | Error => {
                 associatedPluginByType = availablePlugins.find(x => x.type === unitType) || availablePlugins.find(x => x.type !== "color")
             }
         }
+
+        arbitraryValue = decodeArbitraryValue(arbitraryValue)
 
         return {
             root: root,
