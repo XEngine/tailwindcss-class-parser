@@ -148,6 +148,18 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ["rounded", [
         {scaleKey: "borderRadius", ns: 'borderRadius', class: ['border-radius'], type: 'length'},
     ]],
+    ["rounded-tl", [
+        {scaleKey: "borderRadius", ns: 'borderTopLeftRadius', class: ['border-top-left-radius'], type: 'length'},
+    ]],
+    ["rounded-tr", [
+        {scaleKey: "borderRadius", ns: 'borderTopRightRadius', class: ['border-top-right-radius'], type: 'length'},
+    ]],
+    ["rounded-br", [
+        {scaleKey: "borderRadius", ns: 'borderBottomRightRadius', class: ['border-bottom-right-radius'], type: 'length'},
+    ]],
+    ["rounded-bl", [
+        {scaleKey: "borderRadius", ns: 'borderBottomLeftRadius', class: ['border-bottom-left-radius'], type: 'length'},
+    ]],
     ["flex", [
         {scaleKey: "flex", ns: 'flex', class: ['flex'], type: 'number'},
     ]],

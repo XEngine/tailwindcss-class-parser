@@ -151,3 +151,73 @@ it("w-1/2", () => {
         }
     )
 })
+it("should parse rounded corner classes", () => {
+    expect(parse("rounded-tl-lg")).toEqual({
+        arbitrary: false,
+        important: false,
+        kind: "functional",
+        modifier: null,
+        negative: false,
+        property: "borderTopLeftRadius",
+        root: "rounded-tl",
+        value: "0.5rem",
+        valueDef: {
+            class: ["border-top-left-radius"],
+            kind: "length",
+            raw: "lg",
+            value: "0.5rem",
+        },
+        variants: [],
+    });
+    expect(parse("rounded-tr-lg")).toEqual({
+        arbitrary: false,
+        important: false,
+        kind: "functional",
+        modifier: null,
+        negative: false,
+        property: "borderTopRightRadius",
+        root: "rounded-tr",
+        value: "0.5rem",
+        valueDef: {
+            class: ["border-top-right-radius"],
+            kind: "length",
+            raw: "lg",
+            value: "0.5rem",
+        },
+        variants: [],
+    });
+    expect(parse("rounded-bl-lg")).toEqual({
+        arbitrary: false,
+        important: false,
+        kind: "functional",
+        modifier: null,
+        negative: false,
+        property: "borderBottomLeftRadius",
+        root: "rounded-bl",
+        value: "0.5rem",
+        valueDef: {
+            class: ["border-bottom-left-radius"],
+            kind: "length",
+            raw: "lg",
+            value: "0.5rem",
+        },
+        variants: [],
+    });
+    expect(parse("rounded-br-lg")).toEqual({
+        arbitrary: false,
+        important: false,
+        kind: "functional",
+        modifier: null,
+        negative: false,
+        property: "borderBottomRightRadius",
+        root: "rounded-br",
+        value: "0.5rem",
+        valueDef: {
+            class: ["border-bottom-right-radius"],
+            kind: "length",
+            raw: "lg",
+            value: "0.5rem",
+        },
+        variants: [],
+    });
+});
