@@ -163,6 +163,9 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
     ["flex", [
         {scaleKey: "flex", ns: 'flex', class: ['flex'], type: 'number'},
     ]],
+    ["basis", [
+        {scaleKey: "flexBasis", ns: 'flexBasis', class: ['flex-basis'], type: 'length'},
+    ]],
     ["grid-cols", [
         {scaleKey: "gridTemplateColumns", ns: 'gridTemplateColumns', class: ['grid-template-columns'], type: 'number'},
     ]],
@@ -474,6 +477,10 @@ export const namedPlugins = new Map<string, NamedPlugin>([
     ["shrink-0", {class: ['flex-shrink'], value: '0', ns: 'flexShrink'}],
     ["flex-shrink", {class: ['flex-shrink'], value: '1', ns: 'flexShrink'}],
     ["flex-shrink-0", {class: ['flex-shrink'], value: '0', ns: 'flexShrink'}],
+
+    // Flex Basis
+    ['basis-auto', { class: ['flex-basis'], value: 'auto', ns: 'flexBasis' }],
+    ['basis-full', { class: ['flex-basis'], value: '100%', ns: 'flexBasis' }],
 
     // Filters
     ["grayscale", {class: ['filter'], value: 'grayscale(100%)', ns: 'grayScale'}],
