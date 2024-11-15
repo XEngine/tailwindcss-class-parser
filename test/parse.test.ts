@@ -221,3 +221,62 @@ it("should parse rounded corner classes", () => {
         variants: [],
     });
 });
+it('should parse flex-basis classes', () => {
+    expect(parse('basis-full')).toEqual({
+        "arbitrary": false,
+        "important": false,
+        "kind": "named",
+        "modifier": null,
+        "negative": false,
+        "property": "flexBasis",
+        "root": "basis-full",
+        "value": "100%",
+        "valueDef":  {
+        "class": [
+            "flex-basis",
+        ],
+        "kind": "named",
+        "raw": "basis-full",
+        "value": "100%",
+        },
+        "variants":  [],
+    })
+    expect(parse('basis-auto')).toEqual({
+        "arbitrary": false,
+        "important": false,
+        "kind": "named",
+        "modifier": null,
+        "negative": false,
+        "property": "flexBasis",
+        "root": "basis-auto",
+        "value": "auto",
+        "valueDef":  {
+        "class": [
+            "flex-basis",
+        ],
+        "kind": "named",
+        "raw": "basis-auto",
+        "value": "auto",
+        },
+        "variants":  [],
+    })
+    expect(parse('basis-7')).toEqual({
+        "arbitrary": false,
+        "important": false,
+        "kind": "functional",
+        "modifier": null,
+        "negative": false,
+        "property": "flexBasis",
+        "root": "basis",
+        "value": "1.75rem",
+        "valueDef":  {
+        "class": [
+            "flex-basis",
+        ],
+        "kind": "length",
+        "raw": "7",
+        "value": "1.75rem",
+        },
+        "variants":  [],
+    })
+})
