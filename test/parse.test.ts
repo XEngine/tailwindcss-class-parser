@@ -280,3 +280,64 @@ it('should parse flex-basis classes', () => {
         "variants":  [],
     })
 })
+it('should parse inset classes', () => {
+    expect(parse('inset-2')).toEqual({
+        "arbitrary": false,
+        "important": false,
+        "kind": "functional",
+        "modifier": null,
+        "negative": false,
+        "property": "inset",
+        "root": "inset",
+        "value": "0.5rem",
+        "valueDef": {
+        "class": [
+            "inset",
+        ],
+        "kind": "length",
+        "raw": "2",
+        "value": "0.5rem",
+        },
+        "variants": [],
+    })
+    expect(parse('inset-y-2')).toEqual({
+        "arbitrary": false,
+        "important": false,
+        "kind": "functional",
+        "modifier": null,
+        "negative": false,
+        "property": "insetY",
+        "root": "inset-y",
+        "value": "0.5rem",
+        "valueDef": {
+          "class": [
+            "top",
+            "bottom",
+          ],
+          "kind": "length",
+          "raw": "2",
+          "value": "0.5rem",
+        },
+        "variants": [],
+    })
+    expect(parse('inset-x-2')).toEqual({
+        "arbitrary": false,
+        "important": false,
+        "kind": "functional",
+        "modifier": null,
+        "negative": false,
+        "property": "insetX",
+        "root": "inset-x",
+        "value": "0.5rem",
+        "valueDef": {
+          "class": [
+            "left",
+            "right",
+          ],
+          "kind": "length",
+          "raw": "2",
+          "value": "0.5rem",
+        },
+        "variants": [],
+    })
+})
