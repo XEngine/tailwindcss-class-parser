@@ -246,15 +246,9 @@ export const functionalPlugins = new Map<string, FunctionalPlugin[]>([
         {scaleKey: "inset", ns: 'inset', class: ['inset'], type: 'length', supportNegative: true},
     ]],
     ["inset-x", [
-        {scaleKey: "inset", ns: 'insetX', class: ['inset-x'], type: 'length', supportNegative: true},
-    ]],
-    ["inset-x", [
-        {scaleKey: "inset", ns: 'insetY', class: ['inset'], type: 'length', supportNegative: true},
-    ]],
-    ["inset-x", [
         {scaleKey: "inset", ns: 'insetX', class: ['left', 'right'], type: 'length', supportNegative: true},
     ]],
-    ["inset-x", [
+    ["inset-y", [
         {scaleKey: "inset", ns: 'insetY', class: ['top', 'bottom'], type: 'length', supportNegative: true},
     ]],
     ["top", [
